@@ -281,6 +281,31 @@ footer.site{padding-block:56px 32px;border-top:1px solid var(--line)}
 .q-back{background:none;border:0;color:var(--muted);font:600 .95rem var(--f);cursor:pointer;justify-self:start;padding:0}
 .toast{position:fixed;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.92rem;opacity:0;transition:.25s;z-index:95;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* stock photos (hotlinked; tinted fallback if a photo fails to load) */
+.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
+.hero-art.photo .bottle-big{left:78%;bottom:-4%;height:62%;animation:none;transform:translateX(-50%) rotate(-8deg)}
+.hero-art.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.25));pointer-events:none}
+.hero-art .tag,.hero-art .bottle-big{z-index:2}
+.tile.photo{color:#fff}
+.tile.photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.05) 45%,rgba(0,0,0,.35) 100%)}
+.tile.photo p{color:rgba(255,255,255,.88)}
+.tile > div,.tile .pill{position:relative;z-index:2}
+.tile svg.b{z-index:2}
+.tile.photo svg.b{height:56%}
+.tile.photo .pill{background:#fff;color:#141414}
+.gallery{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}
+@media (max-width:860px){.gallery{grid-template-columns:1fr 1fr}.gallery figure:first-child{grid-column:1/-1}}
+@media (max-width:520px){.gallery{grid-template-columns:1fr}}
+.gallery figure{margin:0;position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/5;max-width:100%;background:var(--sand)}
+.gallery figure:first-child{aspect-ratio:auto;min-height:100%}
+@media (max-width:860px){.gallery figure:first-child{aspect-ratio:16/10}}
+.gallery figure:nth-child(2){background:var(--blush)}
+.gallery figure:nth-child(3){background:var(--sage)}
+.gallery figcaption{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(255,255,255,.94);color:#141414;border-radius:16px;padding:12px 14px;font-weight:600;font-size:.92rem;line-height:1.35;z-index:2}
+.gallery figcaption b{display:block;font-size:1.05rem}
+.credits{font-size:.78rem}
+.credits a{text-decoration:underline;font-weight:500}
 </style>
 </head>
 <body>
@@ -356,7 +381,8 @@ footer.site{padding-block:56px 32px;border-top:1px solid var(--line)}
         </div>
         <div class="hero-note"><span>No doctor visit needed to start</span><span>Discreet delivery</span><span>Cash on delivery</span></div>
       </div>
-      <div class="hero-art" aria-hidden="true">
+      <div class="hero-art photo" aria-hidden="true">
+        <img class="ph" src="https://images.unsplash.com/photo-1630827020718-3433092696e7?auto=format&fit=crop&w=1200&q=80" alt="" loading="eager" onerror="this.parentNode.classList.remove('photo');this.remove()">
         <svg class="bottle-big" viewBox="0 0 120 260"><use href="#bottle"/></svg>
         <div class="tag a"><b>3–4 months</b>to visible regrowth</div>
         <div class="tag c"><b>1 mL</b>twice a day</div>
@@ -368,12 +394,14 @@ footer.site{padding-block:56px 32px;border-top:1px solid var(--line)}
   <!-- HIM / HER -->
   <section style="padding-top:0">
     <div class="wrap split2">
-      <a class="tile men" href="#shop" id="men">
+      <a class="tile men photo" href="#shop" id="men">
+        <img class="ph" src="https://images.pexels.com/photos/4746754/pexels-photo-4746754.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" loading="lazy" onerror="this.parentNode.classList.remove('photo');this.remove()">
         <div><h3>Minoxpak <em class="s">for men</em></h3><p>5% strength for a receding hairline and thinning crown.</p></div>
         <span class="pill">Shop for men →</span>
         <svg class="b" viewBox="0 0 120 260" aria-hidden="true"><use href="#bottle"/></svg>
       </a>
-      <a class="tile women" href="#shop" id="women">
+      <a class="tile women photo" href="#shop" id="women">
+        <img class="ph" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" onerror="this.parentNode.classList.remove('photo');this.remove()">
         <div><h3>Minoxpak <em class="s">for women</em></h3><p>2% strength for a widening part and thinning at the temples.</p></div>
         <span class="pill">Shop for women →</span>
         <svg class="b" viewBox="0 0 120 260" aria-hidden="true"><use href="#bottleRose"/></svg>
@@ -390,6 +418,18 @@ footer.site{padding-block:56px 32px;border-top:1px solid var(--line)}
       <div class="fact"><b>2–4 days</b><span>delivery across Pakistan</span></div>
     </div>
   </div>
+
+  <!-- ROUTINE GALLERY -->
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <div class="head"><div><span class="kicker">Your routine</span><h2>Two minutes, <em class="s">twice a day</em></h2></div><p class="lede" style="max-width:40ch">Fits into your morning and night routine, right next to your toothbrush.</p></div>
+      <div class="gallery">
+        <figure><img class="ph" src="https://images.pexels.com/photos/31497506/pexels-photo-31497506.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Woman with long flowing hair" loading="lazy" onerror="this.remove()"><figcaption><b>Morning</b>Spray on a dry scalp before styling.</figcaption></figure>
+        <figure><img class="ph" src="https://images.unsplash.com/photo-1781344116880-029945a42b75?auto=format&fit=crop&w=900&q=80" alt="Amber glass bottle on a concrete block" loading="lazy" onerror="this.remove()"><figcaption><b>1 mL dose</b>Six sprays cover the thinning area.</figcaption></figure>
+        <figure><img class="ph" src="https://images.pexels.com/photos/12997254/pexels-photo-12997254.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Spray bottle on a white surface" loading="lazy" onerror="this.remove()"><figcaption><b>Night</b>Let it dry for 2 to 4 hours before bed.</figcaption></figure>
+      </div>
+    </div>
+  </section>
 
   <!-- TREATMENTS -->
   <section id="shop">
@@ -511,6 +551,7 @@ footer.site{padding-block:56px 32px;border-top:1px solid var(--line)}
     </div>
     <div class="legal">
       <span>Minoxpak is for external use only. Results vary between people. This site does not give medical advice; speak to a doctor if you have a heart condition, are pregnant or breastfeeding. DRAP registration no. to be added.</span>
+      <span class="credits">Photos: <a href="https://unsplash.com/photos/man-with-beard-and-dark-hair-S3GxGKyGPWM" target="_blank" rel="noopener">Ahmad Ebadi</a>, <a href="https://unsplash.com/photos/blonde-woman-in-black-top-portrait-et_78QkMMQs" target="_blank" rel="noopener">Rafaella Mendes Diniz</a> and <a href="https://unsplash.com/photos/amber-glass-dropper-bottle-with-blank-label-on-concrete-block-MkuwnDkT1s0" target="_blank" rel="noopener">Avtar Singh</a> on Unsplash; <a href="https://www.pexels.com/photo/man-drying-hair-with-hairdryer-in-mirror-4746754/" target="_blank" rel="noopener">Ketut Subiyanto</a>, <a href="https://www.pexels.com/photo/dynamic-portrait-of-woman-with-flowing-hair-31497506/" target="_blank" rel="noopener">woman with flowing hair</a> and <a href="https://www.pexels.com/photo/an-empty-spray-bottle-on-a-white-surface-12997254/" target="_blank" rel="noopener">spray bottle</a> on Pexels. Models are illustrative and are not Minoxpak customers.</span>
       <span>© 2026 Minoxpak. All rights reserved.</span>
     </div>
     <div class="big-word" aria-hidden="true">minoxpak</div>
