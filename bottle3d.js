@@ -13,7 +13,7 @@
      data-backdrop="#BFE8E0"    colour the frosted glass shows through, when the panel behind is a gradient or photo
    Fires a "bottle3d:variant" event on the mount with detail {variant, id} when the switch changes. */
 
-const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
+const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
 
 const CSS = `
 .mx3d{position:relative;isolation:isolate;min-height:280px;-webkit-user-select:none;user-select:none}
@@ -117,35 +117,97 @@ function setup(el) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMapping = THREE.NeutralToneMapping;   // keeps brand colours true, like a colour-managed product shot
+    renderer.toneMappingExposure = 1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.VSMShadowMap;
+    renderer.shadowMap.autoUpdate = false;   // refreshed every few frames in the loop; the shadow barely changes as the bottle turns
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(24, 1, .1, 100);
+    const camera = new THREE.PerspectiveCamera(15, 1, .1, 200);
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
-    // Studio lighting baked into an environment map: tall softbox strips give the glass its highlights.
-    const pm = new THREE.PMREMGenerator(renderer), env = new THREE.Scene();
-    env.add(new THREE.Mesh(new THREE.BoxGeometry(24, 24, 24), new THREE.MeshBasicMaterial({ color: C('#6f6a63'), side: THREE.BackSide })));
-    const softbox = (w, h, x, y, z, k, tint = '#ffffff') => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: C(tint).multiplyScalar(k), side: THREE.DoubleSide }));
-      m.position.set(x, y, z); m.lookAt(0, y * .3, 0); env.add(m);
+    // Small procedural textures (no image downloads).
+    const canvasTex = (w, h, draw, srgb = false, repeat = null) => {
+      const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+      const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+      if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+      t.anisotropy = maxAniso; return t;
     };
-    softbox(1.4, 14, -6.5, 1, 3, 9);          // key strip, left
-    softbox(1, 14, 6.5, 1, 1.5, 5);           // fill strip, right
-    softbox(3, 12, -2, 1, -8, 7);             // rim, behind
-    softbox(10, 10, 0, 10, 0, 2.4, '#fff6ea'); // warm top
-    softbox(8, 3, 0, -1, 9, .8, '#fff4e6');    // soft front bounce
-    scene.environment = pm.fromScene(env, .035).texture;
-    const key = new THREE.DirectionalLight('#ffffff', 1.2); key.position.set(-3, 6, 4); scene.add(key);
+    const rand = (() => { let x = 1234567; return () => ((x = (x * 16807) % 2147483647) / 2147483647); })();
+    // Softbox: bright centre with a smooth falloff to its edges, like a diffused studio light.
+    const softTex = canvasTex(256, 256, (g, w, h) => {
+      const img = g.createImageData(w, h);
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const dx = Math.abs(x / w - .5) * 2, dy = Math.abs(y / h - .5) * 2;
+        const f = Math.pow(Math.max(0, 1 - Math.pow(dx, 6)) * Math.max(0, 1 - Math.pow(dy, 6)), 1.4);
+        const i = (y * w + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 255 * f; img.data[i + 3] = 255;
+      }
+      g.putImageData(img, 0, 0);
+    });
+    // Fine circular brushing for metal: streaks run around the part.
+    const brushTex = canvasTex(512, 512, (g, w, h) => {
+      g.fillStyle = '#7a7a7a'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 1400; i++) { const v = 90 + rand() * 90 | 0; g.fillStyle = `rgb(${v},${v},${v})`; g.globalAlpha = .35; g.fillRect(0, rand() * h, w, rand() * 1.6 + .3); }
+    }, false, [1, 3]);
+    // Soft-touch grain for coated surfaces.
+    const grainTex = canvasTex(256, 256, (g, w, h) => {
+      const img = g.createImageData(w, h);
+      for (let i = 0; i < w * h; i++) { const v = 118 + rand() * 20; img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v; img.data[i * 4 + 3] = 255; }
+      g.putImageData(img, 0, 0);
+    }, false, [6, 6]);
+    // Honed travertine for the plinth: pale stone with faint horizontal veining and pores.
+    const stoneTex = canvasTex(1024, 1024, (g, w, h) => {
+      g.fillStyle = '#efebe4'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 14; i++) { const y = rand() * h; g.fillStyle = `rgba(150,138,120,${.015 + rand() * .02})`; g.fillRect(0, y, w, 2 + rand() * 14); }
+      for (let i = 0; i < 1800; i++) { g.fillStyle = `rgba(120,108,92,${.05 + rand() * .12})`; g.beginPath(); g.ellipse(rand() * w, rand() * h, .6 + rand() * 2.6, .5 + rand() * 1.2, 0, 0, 7); g.fill(); }
+    }, true);
 
-    // The canvas is transparent, so the frosted glass would refract nothing. This backdrop is drawn
-    // only into three's transmission buffer, in the colour of the page behind the mount.
+    // Studio lighting baked into an environment map: a dim room, two tall softbox strips that draw
+    // clean vertical highlights down the glass, a rim light behind for the edges and a big overhead box.
+    const pm = new THREE.PMREMGenerator(renderer), env = new THREE.Scene();
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: C('#2f2d2a'), side: THREE.BackSide })));
+    const floorEnv = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: C('#8f8a82') }));
+    floorEnv.rotation.x = -Math.PI / 2; floorEnv.position.y = -4; env.add(floorEnv);
+    const softbox = (w, h, x, y, z, k, tint = '#ffffff') => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: softTex, color: C(tint).multiplyScalar(k), side: THREE.DoubleSide }));
+      m.position.set(x, y, z); m.lookAt(0, 1, 0); env.add(m);
+    };
+    softbox(3.2, 14, -7, 1.5, 3.5, 11);            // key strip, front left
+    softbox(2.2, 14, 7.5, 1.5, 2, 6);           // fill strip, right
+    softbox(5, 13, 1.5, 2, -9, 4.5);              // rim, behind
+    softbox(12, 12, 0, 12, 1, 5, '#fff8ef');    // overhead
+    softbox(12, 5, 0, 0, 10, 1.6, '#fff4e6');  // low front bounce card
+    scene.environment = pm.fromScene(env, .02).texture;
+    scene.environmentIntensity = 1;
+
+    const key = new THREE.DirectionalLight('#fffaf2', 1.6); key.position.set(-2.6, 7, 3.2);
+    key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 14; key.shadow.blurSamples = 24;
+    key.shadow.bias = -.0004; key.shadow.intensity = .55;
+    Object.assign(key.shadow.camera, { left: -2.2, right: 2.2, top: 3.5, bottom: -1, near: 1, far: 16 });
+    scene.add(key);
+
+    // The canvas is transparent, so glass would refract nothing. This backdrop is drawn only into
+    // three's transmission buffer, in the colours of the page behind the mount, so refraction and
+    // frosting pick up the real background.
     const backdropMat = new THREE.MeshBasicMaterial({ toneMapped: false, depthWrite: false });
-    const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), backdropMat);
-    backdrop.position.z = -6; backdrop.renderOrder = -10;
+    const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), backdropMat);
+    backdrop.renderOrder = -10;
     backdrop.onBeforeRender = r => { backdropMat.colorWrite = r.getRenderTarget() !== null; };
     scene.add(backdrop);
+    function paintBackdrop(top, bottom) {
+      backdropMat.map?.dispose();
+      backdropMat.map = canvasTex(64, 256, (g, w, h) => {
+        const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bottom);
+        g.fillStyle = gr; g.fillRect(0, 0, w, h);
+        const glow = g.createRadialGradient(w / 2, h * .42, 0, w / 2, h * .42, h * .45);
+        glow.addColorStop(0, 'rgba(255,255,255,.22)'); glow.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = glow; g.fillRect(0, 0, w, h);
+      }, true);
+      backdropMat.color.set('#ffffff'); backdropMat.needsUpdate = true;
+    }
 
     // ---------- bottle models ----------
-    const root = new THREE.Group(), spin = new THREE.Group(); root.add(spin); scene.add(root);
+    const root = new THREE.Group(), spin = new THREE.Group(); root.add(spin); scene.add(root); root.position.y = .004;
     const V2 = (x, y) => new THREE.Vector2(x, y);
     const WHITE = C('#ffffff');
     const lathe = (pts, seg = 128, phiStart = 0, phiLength = Math.PI * 2) => new THREE.LatheGeometry(pts, seg, phiStart, phiLength);
@@ -159,9 +221,13 @@ function setup(el) {
       const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso;
       return (texCache[k] = t);
     };
-    const inkMaterial = (kind, extra = {}) => new THREE.MeshStandardMaterial({ map: labelTex(kind, variant), transparent: true, roughness: .42, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, ...extra });
-    const metal = c => new THREE.MeshStandardMaterial({ color: c, metalness: 1, roughness: .28 });
-    const softBlack = () => new THREE.MeshPhysicalMaterial({ color: '#121212', roughness: .5, clearcoat: .35, clearcoatRoughness: .4 });
+    const inkMaterial = (kind, extra = {}) => {
+      const t = labelTex(kind, variant);
+      return new THREE.MeshPhysicalMaterial({ map: t, bumpMap: t, bumpScale: .35, transparent: true, roughness: .34, clearcoat: .3, clearcoatRoughness: .3, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, ...extra });
+    };
+    const metal = c => new THREE.MeshPhysicalMaterial({ color: c, metalness: 1, roughness: .22, bumpMap: brushTex, bumpScale: .15, envMapIntensity: 1.3 });
+    const softBlack = () => new THREE.MeshPhysicalMaterial({ color: '#141414', roughness: .55, bumpMap: grainTex, bumpScale: .4, clearcoat: .25, clearcoatRoughness: .45 });
+    const shadowed = o => { o.traverse?.(m => { if (m.isMesh && !m.material.transparent) m.castShadow = true; }); return o; };
     const roundedRect = (w, d, r) => {
       const s = new THREE.Shape(), x = -w / 2, y = -d / 2;
       s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + d - r);
@@ -175,69 +241,73 @@ function setup(el) {
     };
     const collar = (y0, y1, r, m) => add(lathe([V2(r - .08, y0), V2(r - .012, y0), V2(r, y0 + .012), V2(r, y0 + .05), V2(r - .007, y0 + .056), V2(r, y0 + .062), V2(r, y1 - .012), V2(r - .012, y1), V2(r - .1, y1)]), m);
     const pump = (y0, r, h, m) => {
-      add(lathe([V2(0, y0), V2(r * .3, y0), V2(r * .3, y0 + .02), V2(r * .97, y0 + .02), V2(r, y0 + .03), V2(r, y0 + h - .065), V2(r * .956, y0 + h - .029), V2(r * .83, y0 + h - .009), V2(r * .59, y0 + h - .002), V2(0, y0 + h)]), m);
+      shadowed(add(lathe([V2(0, y0), V2(r * .3, y0), V2(r * .3, y0 + .02), V2(r * .97, y0 + .02), V2(r, y0 + .03), V2(r, y0 + h - .065), V2(r * .956, y0 + h - .029), V2(r * .83, y0 + h - .009), V2(r * .59, y0 + h - .002), V2(0, y0 + h)]), m));
       const nz = new THREE.Mesh(new THREE.CylinderGeometry(.038, .038, .03, 32), m); nz.rotation.x = Math.PI / 2; nz.position.set(0, y0 + h * .63, r + .007); spin.add(nz);
       const hole = new THREE.Mesh(new THREE.CircleGeometry(.012, 24), new THREE.MeshBasicMaterial({ color: '#000' })); hole.position.set(0, y0 + h * .63, r + .0226); spin.add(hole);
     };
 
     const MODELS = {
-      // Frosted tinted glass with a soft fill line, white ink wrapped all the way round.
+      // Frosted tinted glass over the serum, with a thick clear base, white screen-print wrapped round.
       signature() {
-        const R = .62, shoulder = new THREE.QuadraticBezierCurve(V2(R, 1.92), V2(R, 2.26), V2(.215, 2.27)).getPoints(24);
-        const glass = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .3, transmission: 1, thickness: .7, ior: 1.5, attenuationDistance: 1.6, clearcoat: 1, clearcoatRoughness: .05, specularIntensity: 1, envMapIntensity: 1.15 });
-        add(lathe([V2(0, 0), V2(.48, 0), V2(.56, .006), V2(.598, .024), V2(.615, .055), V2(R, .1), ...shoulder, V2(.205, 2.3), V2(.205, 2.36), V2(0, 2.36)]), glass);
-        const liquid = new THREE.MeshStandardMaterial({ roughness: .25 });
-        add(lathe([V2(0, .12), V2(.5, .12), V2(.545, .14), V2(.56, .19), V2(.56, 1.58), V2(0, 1.58)], 96), liquid);
-        const tube = add(new THREE.CylinderGeometry(.016, .016, 2.2, 12), new THREE.MeshStandardMaterial({ color: '#e9ece8', roughness: .35 })); tube.position.y = 1.22;
+        const R = .62, shoulder = new THREE.QuadraticBezierCurve(V2(R, 1.92), V2(R, 2.26), V2(.215, 2.27)).getPoints(28);
+        const glass = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .24, transmission: 1, thickness: 1.1, ior: 1.52, attenuationDistance: 1.35, clearcoat: 1, clearcoatRoughness: .04, specularIntensity: 1, envMapIntensity: 1.2 });
+        const body = add(lathe([V2(0, 0), V2(.46, 0), V2(.55, .005), V2(.594, .022), V2(.614, .052), V2(R, .1), ...shoulder, V2(.205, 2.3), V2(.2, 2.33), V2(.205, 2.36), V2(0, 2.36)], 160), glass); body.castShadow = true;
+        const liquid = new THREE.MeshPhysicalMaterial({ roughness: .3 });
+        add(lathe([V2(0, .21), V2(.48, .21), V2(.535, .23), V2(.555, .28), V2(.556, 1.6), V2(.4, 1.585), V2(0, 1.58)], 128), liquid);
+        const tube = add(new THREE.CylinderGeometry(.014, .014, 2.1, 16), new THREE.MeshStandardMaterial({ color: '#f1f3f1', roughness: .3 })); tube.position.y = 1.29;
         const ink = inkMaterial('wrap');
-        const label = add(new THREE.CylinderGeometry(R + .003, R + .003, 1.4, 160, 1, true, -Math.PI, Math.PI * 2), ink); label.position.y = 1.06; label.renderOrder = 2;
-        collar(2.29, 2.52, .278, metal('#d9d5cd'));
+        const label = add(new THREE.CylinderGeometry(R + .003, R + .003, 1.4, 180, 1, true, -Math.PI, Math.PI * 2), ink); label.position.y = 1.06; label.renderOrder = 2;
+        shadowed(collar(2.29, 2.52, .278, metal('#d6d3cd')));
         pump(2.525, .205, .37, softBlack());
-        return { kind: 'wrap', ink, apply(c) { glass.attenuationColor.copy(c); liquid.color.copy(c).lerp(WHITE, .28); } };
+        return { kind: 'wrap', ink, apply(c) { glass.attenuationColor.copy(c).lerp(WHITE, .08); liquid.color.copy(c).lerp(WHITE, .5); } };
       },
       // Opaque soft-touch coated bottle, gold-foil type, brushed gold collar under a clear overcap.
       monolith() {
         const R = .56;
-        const body = new THREE.MeshPhysicalMaterial({ roughness: .62, sheen: .5, sheenRoughness: .5, sheenColor: '#ffffff', clearcoat: .12, clearcoatRoughness: .5 });
-        add(lathe([V2(0, 0), V2(.5, 0), V2(.538, .008), V2(.555, .03), V2(R, .07), V2(R, 1.96), V2(.556, 2.0), V2(.54, 2.026), V2(.5, 2.042), V2(.3, 2.05), V2(.2, 2.055), V2(.2, 2.1), V2(0, 2.1)]), body);
-        const ink = inkMaterial('wrap', { color: '#E4C58C', metalness: 1, roughness: .26 });
-        const label = add(new THREE.CylinderGeometry(R + .003, R + .003, 1.4, 160, 1, true, -Math.PI, Math.PI * 2), ink); label.position.y = 1.0; label.renderOrder = 2;
-        collar(2.06, 2.22, .235, metal('#d8b77c'));
+        const body = new THREE.MeshPhysicalMaterial({ roughness: .58, bumpMap: grainTex, bumpScale: .5, sheen: .45, sheenRoughness: .55, sheenColor: '#ffffff', clearcoat: .1, clearcoatRoughness: .55 });
+        add(lathe([V2(0, 0), V2(.5, 0), V2(.538, .008), V2(.555, .03), V2(R, .07), V2(R, 1.96), V2(.556, 2.0), V2(.54, 2.026), V2(.5, 2.042), V2(.3, 2.05), V2(.2, 2.055), V2(.2, 2.1), V2(0, 2.1)], 160), body).castShadow = true;
+        const ink = inkMaterial('wrap', { color: '#E9CC92', metalness: 1, roughness: .22, clearcoat: 0, bumpScale: .6 });
+        const label = add(new THREE.CylinderGeometry(R + .003, R + .003, 1.4, 180, 1, true, -Math.PI, Math.PI * 2), ink); label.position.y = 1.0; label.renderOrder = 2;
+        shadowed(collar(2.06, 2.22, .235, metal('#dcbc80')));
         pump(2.22, .175, .3, softBlack());
-        const acrylic = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 1, roughness: .04, thickness: .25, ior: 1.49, clearcoat: 1, clearcoatRoughness: .03, specularIntensity: 1 });
+        const acrylic = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 1, roughness: .02, thickness: .35, ior: 1.49, clearcoat: 1, clearcoatRoughness: .02, specularIntensity: 1, envMapIntensity: 1.3 });
         add(lathe([V2(.248, 2.2), V2(.262, 2.205), V2(.266, 2.22), V2(.266, 2.89), V2(.26, 2.928), V2(.238, 2.948), V2(0, 2.952)]), acrylic);
         return { kind: 'wrap', ink, apply(c) { body.color.copy(c); } };
       },
-      // Heavy clear glass block with a thick base, visible serum, front label and a piano-black cap.
+      // Heavy clear glass: a reflective glass skin over refracting serum and a thick solid base.
       prism() {
         const W = .98, D = .62, Hb = 1.9;
-        const glass = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .03, transmission: 1, thickness: 1.6, ior: 1.5, attenuationDistance: 2.5, clearcoat: 1, clearcoatRoughness: .02, specularIntensity: 1, envMapIntensity: 1.35 });
-        add(roundedBox(W, D, Hb, .14, .07, 0), glass);
-        const liquid = new THREE.MeshStandardMaterial({ roughness: .18 });
-        add(roundedBox(W - .2, D - .2, 1.08, .06, .03, .38), liquid);
-        add(new THREE.CylinderGeometry(.16, .16, .1, 48), glass).position.y = Hb + .03;
-        const ink = inkMaterial('front', { color: '#16201f', roughness: .35 });
-        const label = add(new THREE.PlaneGeometry(.72, .985), ink); label.position.set(0, 1.0, D / 2 + .004); label.renderOrder = 2;
-        collar(Hb + .02, Hb + .14, .21, metal('#dcd9d3'));
-        const cap = new THREE.MeshPhysicalMaterial({ color: '#0d0d0d', roughness: .22, clearcoat: 1, clearcoatRoughness: .05 });
-        add(roundedBox(.52, .52, .72, .07, .035, Hb + .13), cap);
-        return { kind: 'front', ink, apply(c) { glass.attenuationColor.copy(c).lerp(WHITE, .72); liquid.color.copy(c).lerp(c.r > c.g ? C('#f0a090') : C('#5fd0c8'), .45); } };
+        const skin = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .02, metalness: 0, transparent: true, opacity: .16, clearcoat: 1, clearcoatRoughness: .01, specularIntensity: 1, envMapIntensity: 2.2, depthWrite: false });
+        const skinBack = skin.clone(); skinBack.side = THREE.BackSide; skinBack.opacity = .1;
+        add(roundedBox(W, D, Hb, .14, .07, 0), skinBack).renderOrder = 1;
+        add(roundedBox(W, D, Hb, .14, .07, 0), skin).renderOrder = 3;
+        const solid = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 1, roughness: .02, thickness: 1.2, ior: 1.52, attenuationColor: '#e6f2ee', attenuationDistance: 2, specularIntensity: 1 });
+        add(roundedBox(W - .02, D - .02, .36, .13, .05, .01), solid).castShadow = true;
+        const liquid = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 1, roughness: .03, thickness: .9, ior: 1.36, attenuationDistance: .55, specularIntensity: .6 });
+        add(roundedBox(W - .16, D - .16, 1.1, .08, .02, .37), liquid).castShadow = true;
+        add(new THREE.CylinderGeometry(.16, .16, .1, 48), solid).position.y = Hb + .03;
+        const ink = inkMaterial('front', { color: '#16201f', roughness: .3, clearcoat: 0 });
+        const label = add(new THREE.PlaneGeometry(.72, .985), ink); label.position.set(0, 1.0, D / 2 + .004); label.renderOrder = 4;
+        shadowed(collar(Hb + .02, Hb + .14, .21, metal('#dcd9d3')));
+        const cap = new THREE.MeshPhysicalMaterial({ color: '#0b0b0b', roughness: .18, clearcoat: 1, clearcoatRoughness: .03 });
+        add(roundedBox(.52, .52, .72, .07, .035, Hb + .13), cap).castShadow = true;
+        return { kind: 'front', ink, apply(c) { liquid.attenuationColor.copy(c).lerp(c.r > c.g ? C('#f08a74') : C('#3fb8b4'), .5); } };
       },
-      // Flattened oval flask in milky frosted glass, coloured ink and a glossy ceramic cap.
+      // Flattened oval flask in opal frosted glass, coloured ink and a glossy ceramic cap.
       pebble() {
-        const sp = new THREE.SplineCurve([V2(.42, 0), V2(.6, .08), V2(.71, .3), V2(.745, .7), V2(.715, 1.08), V2(.6, 1.48), V2(.42, 1.8), V2(.25, 2.0), V2(.2, 2.06)]).getPoints(80);
+        const sp = new THREE.SplineCurve([V2(.42, 0), V2(.6, .08), V2(.71, .3), V2(.745, .7), V2(.715, 1.08), V2(.6, 1.48), V2(.42, 1.8), V2(.25, 2.0), V2(.2, 2.06)]).getPoints(90);
         const flat = g => { g.scale(1, 1, .64); return g; };
-        const glass = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .48, transmission: 1, thickness: 1.3, ior: 1.5, attenuationColor: '#efe6dc', attenuationDistance: 1.4, clearcoat: .7, clearcoatRoughness: .15, specularIntensity: 1 });
-        add(flat(lathe([V2(0, 0), ...sp, V2(.2, 2.1), V2(0, 2.1)], 160)), glass);
-        const liquid = new THREE.MeshStandardMaterial({ roughness: .3 });
-        add(flat(lathe([V2(0, .1), ...sp.filter(p => p.y > .12 && p.y < 1.3).map(p => V2(p.x * .9, p.y)), V2(0, 1.3)], 96)), liquid);
+        const glass = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .26, transmission: 1, thickness: 1.5, ior: 1.5, attenuationColor: '#f2ebe3', attenuationDistance: 1.5, clearcoat: 1, clearcoatRoughness: .06, specularIntensity: 1, envMapIntensity: 1.2 });
+        add(flat(lathe([V2(0, 0), ...sp, V2(.2, 2.1), V2(0, 2.1)], 180)), glass).castShadow = true;
+        const liquid = new THREE.MeshPhysicalMaterial({ roughness: .2 });
+        add(flat(lathe([V2(0, .16), ...sp.filter(p => p.y > .18 && p.y < 1.3).map(p => V2(p.x * .9, p.y)), V2(0, 1.3)], 96)), liquid);
         const band = sp.filter(p => p.y >= .5 && p.y <= 1.42).map(p => V2(p.x + .004, p.y));
-        const ink = inkMaterial('pebble', { roughness: .5 });
+        const ink = inkMaterial('pebble', { roughness: .4 });
         const label = add(flat(lathe(band, 64, -.78, 1.56)), ink); label.renderOrder = 2;
-        collar(2.08, 2.18, .23, metal('#d8b77c'));
-        const cap = new THREE.MeshPhysicalMaterial({ roughness: .3, clearcoat: .9, clearcoatRoughness: .08 });
-        add(lathe([V2(0, 2.17), V2(.27, 2.17), V2(.282, 2.19), V2(.282, 2.52), V2(.262, 2.7), V2(.2, 2.84), V2(.11, 2.92), V2(0, 2.94)]), cap);
-        return { kind: 'pebble', ink, apply(c) { ink.color.copy(c); cap.color.copy(c); liquid.color.copy(c).lerp(WHITE, .7); } };
+        shadowed(collar(2.08, 2.18, .23, metal('#dcbc80')));
+        const cap = new THREE.MeshPhysicalMaterial({ roughness: .25, clearcoat: 1, clearcoatRoughness: .04 });
+        add(lathe([V2(0, 2.17), V2(.27, 2.17), V2(.282, 2.19), V2(.282, 2.52), V2(.262, 2.7), V2(.2, 2.84), V2(.11, 2.92), V2(0, 2.94)], 128), cap).castShadow = true;
+        return { kind: 'pebble', ink, apply(c) { ink.color.copy(c); cap.color.copy(c); liquid.color.copy(c).lerp(WHITE, .72); } };
       }
     };
     const model = (MODELS[el.dataset.model] || MODELS.signature)();
@@ -246,26 +316,28 @@ function setup(el) {
 
     // ---------- plinth and contact shadow ----------
     const showPlinth = el.dataset.plinth !== 'off';
-    const plinthMat = new THREE.MeshStandardMaterial({ roughness: .92 });
+    const plinthMat = new THREE.MeshPhysicalMaterial({ map: stoneTex, roughness: .78, bumpMap: stoneTex, bumpScale: .6, clearcoat: .15, clearcoatRoughness: .6 });
     const PR = 1.28;
-    const plinth = new THREE.Mesh(lathe([V2(0, -.3), V2(PR - .02, -.3), V2(PR, -.28), V2(PR, -.02), V2(PR - .02, 0), V2(0, 0)]), plinthMat);
-    plinth.visible = showPlinth; scene.add(plinth);
+    const plinth = new THREE.Mesh(new THREE.CylinderGeometry(PR, PR, .32, 160, 1), plinthMat); plinth.position.y = -.16;
+    plinth.receiveShadow = true; plinth.visible = showPlinth; scene.add(plinth);
+    // Tight contact shadow where the bottle meets the stone (ambient occlusion the shadow map can't give).
     const sc = document.createElement('canvas'); sc.width = sc.height = 256;
     const sg = sc.getContext('2d'), grd = sg.createRadialGradient(128, 128, 0, 128, 128, 128);
-    grd.addColorStop(0, 'rgba(0,0,0,.55)'); grd.addColorStop(.45, 'rgba(0,0,0,.28)'); grd.addColorStop(1, 'rgba(0,0,0,0)');
+    grd.addColorStop(0, 'rgba(0,0,0,.7)'); grd.addColorStop(.38, 'rgba(0,0,0,.45)'); grd.addColorStop(.6, 'rgba(0,0,0,.12)'); grd.addColorStop(1, 'rgba(0,0,0,0)');
     sg.fillStyle = grd; sg.fillRect(0, 0, 256, 256);
     const blob = new THREE.CanvasTexture(sc);
     const shadowMat = new THREE.MeshBasicMaterial({ map: blob, transparent: true, depthWrite: false, toneMapped: false });
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.9), shadowMat);
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1.75, 1.75), shadowMat);
     shadow.rotation.x = -Math.PI / 2; shadow.position.y = .002; scene.add(shadow);
+    // Faint coloured light thrown through the glass onto the stone.
     const glowMat = new THREE.MeshBasicMaterial({ map: blob, transparent: true, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, color: tintNow.clone() });
-    const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.1), glowMat);
-    glow.rotation.x = -Math.PI / 2; glow.position.set(.35, .003, .25); glow.visible = showPlinth; scene.add(glow);
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.0), glowMat);
+    glow.rotation.x = -Math.PI / 2; glow.rotation.z = .5; glow.position.set(.45, .003, -.35); glow.visible = showPlinth && model.kind !== 'wrap-opaque'; scene.add(glow);
 
     // ---------- match the page behind the mount (and follow light/dark changes) ----------
     let shadowBase = .7;
     function pageColor() {
-      if (el.dataset.backdrop) return el.dataset.backdrop;
+      if (el.dataset.backdrop) return el.dataset.backdrop.split(',')[0].trim();
       for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
         const bg = getComputedStyle(n).backgroundColor, m = bg && bg.match(/[\d.]+/g);
         if (m && (m.length < 4 || +m[3] > .5)) return bg;
@@ -274,10 +346,13 @@ function setup(el) {
     }
     function applyTheme() {
       const bg = new THREE.Color(); try { bg.setStyle(pageColor()); } catch (e) { bg.set('#EAE4DA'); }
-      backdropMat.color.copy(bg);
+      const parts = (el.dataset.backdrop || '').split(',').map(x => x.trim()).filter(Boolean);
+      const top = '#' + bg.getHexString(), bottom = parts[1] || '#' + bg.clone().offsetHSL(0, 0, -.06).getHexString();
+      paintBackdrop(top, bottom);
       const hsl = {}; bg.getHSL(hsl); const dark = hsl.l < .4;
-      plinthMat.color.copy(bg).offsetHSL(0, 0, dark ? .05 : -.04);
-      shadowBase = dark ? .9 : .7; glowMat.opacity = dark ? .12 : .22;
+      // stone takes a whisper of the page colour so it sits in the scene
+      plinthMat.color.set('#f4f1ec').lerp(bg, dark ? .55 : .35); if (dark) plinthMat.color.multiplyScalar(.55);
+      shadowBase = dark ? .85 : .6; glowMat.opacity = dark ? .08 : .14;
       tintNow.copy(tintOf(variant)); model.apply(tintNow); glowMat.color.copy(tintNow);
     }
     applyTheme();
@@ -285,7 +360,7 @@ function setup(el) {
     matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => requestAnimationFrame(applyTheme));
 
     // ---------- variant switching ----------
-    let tween = null, rotY = -.9, vel = 0, tiltX = 0, drag = null;
+    let tween = null, rotY = -.45, vel = 0, tiltX = 0, drag = null;
     onVariant = v => {
       const to = tintOf(v);
       tween = { t: 0, from: tintNow.clone(), to, tex: labelTex(model.kind, v), swapped: false };
@@ -297,20 +372,24 @@ function setup(el) {
     function resize() {
       const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
       renderer.setSize(w, h, false);
-      const aspect = w / h, fov = aspect < .9 ? 30 : 24, tan = Math.tan(fov * Math.PI / 360);
+      const aspect = w / h, fov = aspect < .9 ? 19 : 15, tan = Math.tan(fov * Math.PI / 360);
       const ctrl = ui.offsetHeight && el.dataset.ui !== 'right' ? (ui.offsetHeight + 24) / h : 0;      // keep clear of the switch
-      const halfH = 1.75 / (1 - ctrl), halfW = (showPlinth ? 1.42 : 0.9);
+      const halfH = 1.72 / (1 - ctrl), halfW = (showPlinth ? 1.4 : 0.9);
       const zoom = Math.min(2, Math.max(.4, parseFloat(el.dataset.zoom) || 1)) * (w < 480 && el.dataset.ui === 'right' ? .9 : 1);
-      const dist = Math.max(halfH / tan, halfW / (tan * aspect)) * 1.08 / zoom;
+      const dist = Math.max(halfH / tan, halfW / (tan * aspect)) * 1.14 / zoom;
       camera.fov = fov; camera.aspect = aspect;
-      camera.position.set(0, 1.35 + dist * .1, dist);
-      camera.lookAt(0, 1.32 - ctrl * halfH, 0);
+      const lookY = 1.3 - ctrl * halfH;
+      camera.position.set(0, lookY + dist * .085, dist);
+      camera.lookAt(0, lookY, 0);
+      // backdrop fills the view a little way behind the bottle
+      const bd = dist + 3, bh = 2 * Math.tan(fov * Math.PI / 360) * bd * 1.1;
+      backdrop.position.set(0, lookY, -3); backdrop.scale.set(bh * aspect, bh, 1); backdrop.lookAt(camera.position);
       camera.updateProjectionMatrix();
     }
     new ResizeObserver(resize).observe(el); resize();
 
     // ---------- drag, swipe and keys ----------
-    const AUTO = reduced ? 0 : .22;
+    const AUTO = reduced ? 0 : .16;
     canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, moved: false }; });
     addEventListener('pointermove', e => {
       if (!drag || e.pointerId !== drag.id) return;
@@ -318,7 +397,6 @@ function setup(el) {
       if (!drag.moved && e.pointerType !== 'mouse' && Math.abs(dy) > Math.abs(dx)) { drag = null; return; } // vertical swipe scrolls the page
       if (!drag.moved) el.classList.add('mx3d-touched');
       drag.moved = true; rotY += dx * .011; vel = dx * .011 / (dt / 1000) * .6;
-      tiltX = Math.max(-.16, Math.min(.16, tiltX + dy * .002));
       drag.x = e.clientX; drag.y = e.clientY; drag.t = now;
     });
     const end = () => { drag = null; };
@@ -329,7 +407,7 @@ function setup(el) {
     });
 
     // ---------- render loop, only while on screen ----------
-    let visible = true, raf = 0, last = performance.now();
+    let visible = true, raf = 0, last = performance.now(), frameNo = 0;
     const t0 = last;
     const start = () => { if (!raf && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } };
     new IntersectionObserver(es => { visible = es[0].isIntersecting; start(); }).observe(el);
@@ -339,10 +417,8 @@ function setup(el) {
       raf = 0;
       const dt = Math.min(.05, (now - last) / 1000), t = (now - t0) / 1000; last = now;
       if (!drag) { vel += (AUTO - vel) * Math.min(1, dt * 1.6); rotY += vel * dt; tiltX *= Math.pow(.02, dt); }
-      spin.rotation.y = rotY; root.rotation.x = tiltX * .6;
-      const f = reduced ? 0 : Math.sin(t * 1.1) * .035;
-      root.position.y = .07 + f;
-      const s = 1 - f * 2.2; shadow.scale.set(s, s, s); shadowMat.opacity = shadowBase * (1 - f * 4);
+      spin.rotation.y = rotY;
+      shadowMat.opacity = shadowBase;
       if (tween) {
         tween.t = Math.min(1, tween.t + dt / .7);
         const k = tween.t < .5 ? 2 * tween.t * tween.t : 1 - Math.pow(-2 * tween.t + 2, 2) / 2;
@@ -350,6 +426,7 @@ function setup(el) {
         if (!tween.swapped && tween.t > .35) { model.ink.map = tween.tex; model.ink.needsUpdate = true; tween.swapped = true; }
         if (tween.t >= 1) tween = null;
       }
+      if ((frameNo++ & 3) === 0) renderer.shadowMap.needsUpdate = true;
       renderer.render(scene, camera);
       el.classList.add('mx3d-ready');
       start();
