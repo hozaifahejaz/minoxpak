@@ -18,6 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_PK">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="image" href="bottle-men.webp" type="image/webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;800&family=Inter:wght@400;500;600&display=swap">
@@ -47,7 +48,7 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit}
 h1,h2,h3{font-family:var(--f-display);font-weight:500;letter-spacing:-.03em;line-height:1.1;margin:0;text-wrap:balance}
-h1{font-size:clamp(2.3rem,5.4vw,4rem)}
+h1{font-size:clamp(2.15rem,5vw,3.6rem)}
 h2{font-size:clamp(1.7rem,3.2vw,2.5rem)}
 h3{font-size:1.15rem;font-weight:600;letter-spacing:-.015em;line-height:1.3}
 p{margin:0}
@@ -94,12 +95,12 @@ header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--
 .mobile-menu a:last-child{border-bottom:0}
 
 /* hero */
-.hero{padding-block:clamp(40px,7vw,88px) clamp(40px,6vw,72px)}
-.hero-copy{display:grid;gap:22px;justify-items:center;text-align:center}
+.hero{padding-block:clamp(28px,5vw,64px) clamp(40px,6vw,72px)}
+.hero-copy{display:grid;gap:clamp(16px,2vw,22px);justify-items:center;text-align:center}
 .hero-copy h1{max-width:15ch}
 .hero-copy .lede{max-width:46ch}
-.assure{color:var(--muted);font-size:.95rem}
-.stage{position:relative;display:flex;margin:clamp(36px,5vw,56px) auto 0;max-width:920px;height:clamp(380px,50vw,520px);border-radius:32px;overflow:hidden;background:linear-gradient(160deg,#0E4F5C,#17808A)}
+.assure{color:var(--muted);font-size:.95rem;text-align:center;margin-top:18px}
+.stage{position:relative;display:flex;margin:clamp(26px,4vw,44px) auto 0;max-width:920px;height:clamp(340px,44vw,480px);border-radius:clamp(24px,3vw,32px);overflow:hidden;background:linear-gradient(160deg,#0E4F5C,#17808A)}
 #hero-3d{position:relative;width:100%;height:100%;display:grid;place-items:center}
 #hero-3d > img{height:80%;width:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35))}
 
@@ -119,7 +120,22 @@ header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--
 .plan .amt{font-family:var(--f-display);font-weight:600;font-size:1.7rem;letter-spacing:-.03em;margin-top:14px;font-variant-numeric:tabular-nums}
 .plan .per{color:var(--muted);font-size:.92rem;min-height:1.6em}
 .plan .per b{color:var(--brand);font-weight:600}
+.plan .per i{font-style:normal}
 .plan .btn{margin-top:16px}
+/* phones: each plan becomes a compact row (bottle left, details right) so all plans fit in about one screen */
+@media (max-width:560px){
+  .plans{gap:16px}
+  .plan{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:18px;row-gap:2px;align-items:center;text-align:left;padding:22px 20px 20px}
+  .plan .tag{left:20px;transform:none}
+  .plan .pic{grid-row:1 / span 4;height:132px;margin:0;min-width:92px;justify-content:flex-start}
+  .plan .pic span{font-size:1.1rem;padding-bottom:6px}
+  .plan h3{align-self:end}
+  .plan .amt{margin-top:6px;font-size:1.45rem}
+  .plan .per{min-height:0;align-self:start}
+  .plan .per i{display:none}
+  .plan .per b{display:block}
+  .plan .btn{grid-column:1 / -1;margin-top:14px}
+}
 .addon{display:flex;align-items:center;gap:14px;max-width:520px;margin:28px auto 0;padding:16px 20px;border:1.5px solid var(--line);border-radius:18px;cursor:pointer;background:var(--surface)}
 .addon input{width:22px;height:22px;accent-color:var(--brand);flex:none}
 .addon small{display:block;color:var(--muted);font-size:.9rem}
@@ -138,9 +154,17 @@ header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--
 
 /* results */
 .track{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;border-top:1px solid var(--line);padding-top:28px}
-@media (max-width:760px){.track{grid-template-columns:1fr 1fr}}
-@media (max-width:440px){.track{grid-template-columns:1fr}}
-.ms{display:grid;gap:6px;align-content:start}
+.ms{position:relative;display:grid;gap:6px;align-content:start}
+.ms::before{content:"";position:absolute;left:0;top:-34px;width:11px;height:11px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 5px var(--bg)}
+/* phones and small tablets: the timeline runs down the page with a rail on the left */
+@media (max-width:760px){
+  .track{grid-template-columns:1fr;gap:0;border-top:0;padding-top:0}
+  .ms{padding:0 0 26px 30px}
+  .ms::before{top:4px}
+  .ms::after{content:"";position:absolute;left:5px;top:22px;bottom:-2px;width:1.5px;background:var(--line)}
+  .ms:last-child{padding-bottom:0}
+  .ms:last-child::after{display:none}
+}
 .ms .when{font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand)}
 .ms p{color:var(--muted);font-size:.95rem}
 .cite{margin-top:clamp(28px,4vw,40px);color:var(--muted);font-size:.95rem;max-width:70ch}
@@ -292,11 +316,11 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
         <h1>Regrow thicker hair with one simple spray.</h1>
         <p class="lede">The clinically proven hair regrowth treatment, in a fine mist that dries fast and fits your day.</p>
         <button class="btn btn-accent" id="heroCta" data-quiz>Find my plan</button>
-        <p class="assure">Cash on delivery · Free delivery over Rs. 3,000 · Arrives in 2 to 4 days</p>
       </div>
       <div class="stage">
-        <div id="hero-3d" data-model="pebble" data-ui="right" data-zoom=".88" data-backdrop="#8FD3C8"><img src="bottle-men.webp" width="430" height="900" alt="Minoxpak 5% minoxidil spray bottle"></div>
+        <div id="hero-3d" data-model="pebble" data-controls="off" data-zoom=".95" data-backdrop="#8FD3C8"><img src="bottle-men.webp" width="430" height="900" fetchpriority="high" alt="Minoxpak 5% minoxidil spray bottle"></div>
       </div>
+      <p class="assure">Cash on delivery · Free delivery over Rs. 3,000 · Arrives in 2 to 4 days</p>
     </div>
   </section>
 
@@ -440,7 +464,7 @@ window.dataLayer=window.dataLayer||[];
 const track=(event,data={})=>window.dataLayer.push({event,...data});
 const P=id=>PRODUCTS.find(p=>p.id===id);
 const thumb=p=>p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<svg width="26" height="32" aria-hidden="true"><use href="#roller"/></svg>`;
-const perMonth=p=>p.months>1?`${rs(Math.round(p.price/p.months))} a month${p.was?` · <b>save ${Math.round((1-p.price/p.was)*100)}%</b>`:''}`:'';
+const perMonth=p=>p.months>1?`${rs(Math.round(p.price/p.months))} a month${p.was?`<i> · </i><b>save ${Math.round((1-p.price/p.was)*100)}%</b>`:''}`:'';
 
 // plans: pick men or women, then one of up to three packs
 let who='men';
