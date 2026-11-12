@@ -7,6 +7,9 @@
      data-variant="men|women"   start variant (default men)
      data-controls="off"        hide the 5% / 2% switch
      data-plinth="off"          hide the stone plinth
+     data-ui="right"            stack the switch at the middle right instead of bottom centre
+     data-zoom="0.8"            draw the bottle smaller (or larger) than the default fit
+     data-backdrop="#BFE8E0"    colour the frosted glass shows through, when the panel behind is a gradient or photo
    Fires a "bottle3d:variant" event on the mount with detail {variant, id} when the switch changes. */
 
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
@@ -27,13 +30,18 @@ const CSS = `
 .mx3d-hint::before,.mx3d-hint::after{content:"";width:18px;height:1px;background:currentColor}
 .mx3d.mx3d-ready .mx3d-hint{opacity:1}
 .mx3d.mx3d-touched .mx3d-hint{opacity:0;transition-delay:0s}
+.mx3d[data-ui="right"] .mx3d-ui{left:auto;bottom:auto;top:50%;right:max(14px,env(safe-area-inset-right,0px));transform:translateY(-50%)}
+.mx3d[data-ui="right"] .mx3d-switch{flex-direction:column;border-radius:22px}
+.mx3d[data-ui="right"] .mx3d-switch button{border-radius:18px;padding:10px 13px}
+.mx3d[data-ui="right"] .mx3d-hint{display:none}
+@media (max-width:480px){.mx3d-switch button{font-size:12px;padding:9px 12px}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mx3d-switch{background:rgba(30,30,28,.7)}:root:not([data-theme="light"]) .mx3d-switch button{color:#bdb7ad}:root:not([data-theme="light"]) .mx3d-switch button[aria-pressed="true"]{background:#f2efea;color:#141414}:root:not([data-theme="light"]) .mx3d-hint{color:rgba(242,239,234,.55)}}
 :root[data-theme="dark"] .mx3d-switch{background:rgba(30,30,28,.7)}:root[data-theme="dark"] .mx3d-switch button{color:#bdb7ad}:root[data-theme="dark"] .mx3d-switch button[aria-pressed="true"]{background:#f2efea;color:#141414}:root[data-theme="dark"] .mx3d-hint{color:rgba(242,239,234,.55)}
 `;
 
 const VARIANTS = {
-  men:   { id: 'm5', pct: '5%', who: 'FOR MEN',   label: 'Men · 5%',   tint: '#2c6a55', cssVar: '--brand' },
-  women: { id: 'w2', pct: '2%', who: 'FOR WOMEN', label: 'Women · 2%', tint: '#a7685e' }
+  men:   { id: 'm5', pct: '5%', who: 'FOR MEN',   label: 'Men · 5%',   tint: '#0E4F5C' },
+  women: { id: 'w2', pct: '2%', who: 'FOR WOMEN', label: 'Women · 2%', tint: '#B5584A' }
 };
 
 const mount = document.getElementById('hero-3d') || document.querySelector('[data-bottle3d]');
@@ -142,7 +150,7 @@ function setup(el) {
     const shoulder = new THREE.QuadraticBezierCurve(V2(R, H), V2(R, 2.26), V2(.215, 2.27)).getPoints(24);
     const glass = new THREE.MeshPhysicalMaterial({
       color: '#ffffff', roughness: .3, transmission: 1, thickness: .7, ior: 1.5,
-      attenuationColor: tintOf(variant), attenuationDistance: 1.1,
+      attenuationColor: tintOf(variant), attenuationDistance: 1.6,
       clearcoat: 1, clearcoatRoughness: .05, specularIntensity: 1, envMapIntensity: 1.15
     });
     spin.add(new THREE.Mesh(lathe([V2(0, 0), V2(.48, 0), V2(.56, .006), V2(.598, .024), V2(.615, .055), V2(R, .1), ...shoulder, V2(.205, 2.3), V2(.205, 2.36), V2(0, 2.36)]), glass));
@@ -200,6 +208,7 @@ function setup(el) {
     // ---------- match the page behind the mount (and follow light/dark changes) ----------
     let shadowBase = .7;
     function pageColor() {
+      if (el.dataset.backdrop) return el.dataset.backdrop;
       for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
         const bg = getComputedStyle(n).backgroundColor, m = bg && bg.match(/[\d.]+/g);
         if (m && (m.length < 4 || +m[3] > .5)) return bg;
@@ -232,9 +241,10 @@ function setup(el) {
       const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
       renderer.setSize(w, h, false);
       const aspect = w / h, fov = aspect < .9 ? 30 : 24, tan = Math.tan(fov * Math.PI / 360);
-      const ctrl = ui.offsetHeight ? (ui.offsetHeight + 24) / h : 0;      // keep clear of the switch
+      const ctrl = ui.offsetHeight && el.dataset.ui !== 'right' ? (ui.offsetHeight + 24) / h : 0;      // keep clear of the switch
       const halfH = 1.75 / (1 - ctrl), halfW = (showPlinth ? 1.42 : 0.9);
-      const dist = Math.max(halfH / tan, halfW / (tan * aspect)) * 1.08;
+      const zoom = Math.min(2, Math.max(.4, parseFloat(el.dataset.zoom) || 1)) * (w < 480 && el.dataset.ui === 'right' ? .9 : 1);
+      const dist = Math.max(halfH / tan, halfW / (tan * aspect)) * 1.08 / zoom;
       camera.fov = fov; camera.aspect = aspect;
       camera.position.set(0, 1.35 + dist * .1, dist);
       camera.lookAt(0, 1.32 - ctrl * halfH, 0);
