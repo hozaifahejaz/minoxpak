@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MinoxPak: the mist. Topical minoxidil spray for pattern hair loss</title>
+<meta name="description" content="MinoxPak is a topical minoxidil spray for pattern hair loss, made for and sold in Pakistan. What it is, how to use it, what to expect and who should not use it.">
+<meta name="theme-color" content="#e6e8e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10201b; --ink2:#42504b; --ink3:#6f7b76; --line:rgba(16,32,27,.16);
+  --stone:#e6e8e4; --paper:#f1f2ee; --accent:#0e5444; --accent-soft:rgba(14,84,68,.09);
+  --serif:"Instrument Serif","Iowan Old Style","Times New Roman",serif;
+  --sans:"Geist","Helvetica Neue",Arial,sans-serif;
+  --pad:clamp(20px,5.2vw,96px);
+  --ledge:0px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--stone);color:var(--ink)}
+body{font-family:var(--sans);font-weight:400;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
+canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+#scroll{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;z-index:1;outline:none;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#scroll::-webkit-scrollbar{display:none}
+a{color:inherit}
+::selection{background:var(--accent);color:#fff}
+
+/* nav */
+nav{position:fixed;z-index:3;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:22px var(--pad);pointer-events:none}
+nav>*{pointer-events:auto}
+.mark{font-family:var(--serif);font-size:25px;letter-spacing:-.01em;text-decoration:none;line-height:1}
+.mark i{font-style:italic;color:var(--accent)}
+.navr{display:flex;gap:30px;align-items:center;font-size:13px;letter-spacing:.01em}
+.navr a{text-decoration:none;color:var(--ink2);transition:color .3s}
+.navr a:hover{color:var(--ink)}
+#sound{font:inherit;font-size:13px;color:var(--ink);background:rgba(241,242,238,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:99px;padding:7px 14px 7px 12px;cursor:pointer;display:flex;gap:8px;align-items:center;transition:border-color .3s,background .3s}
+#sound:hover{border-color:var(--ink)}
+#sound .dot{width:6px;height:6px;border-radius:50%;border:1px solid var(--ink);transition:background .3s}
+#sound[aria-pressed="true"] .dot{background:var(--accent);border-color:var(--accent)}
+
+/* type */
+.eyebrow{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;gap:14px;align-items:baseline;margin-bottom:26px}
+.eyebrow b{font-weight:500;color:var(--ink3);font-variant-numeric:tabular-nums}
+h1,h2{font-family:var(--serif);font-weight:400;letter-spacing:-.018em;line-height:.98}
+h2{font-size:clamp(42px,5.1vw,96px);margin-bottom:34px}
+h2 .ln,h1 .ln{display:block;width:fit-content;white-space:nowrap}
+h2 em{font-style:italic}
+.gl{color:var(--ink)}
+.gl-on .gl{color:transparent}
+.gl-on .gl::selection{color:transparent;background:rgba(14,84,68,.25)}
+p{max-width:33em}
+p+p{margin-top:1.05em}
+.lead{font-size:clamp(19px,1.45vw,23px);line-height:1.45;letter-spacing:-.008em;color:var(--ink)}
+.body{color:var(--ink2)}
+.ph{font-style:normal;color:var(--accent);background:var(--accent-soft);border-bottom:1px dashed var(--accent);padding:0 .28em;border-radius:2px;white-space:nowrap;font-feature-settings:"tnum"}
+.btn{display:inline-flex;align-items:center;gap:14px;font:500 15px/1 var(--sans);letter-spacing:.005em;text-decoration:none;color:#f1f2ee;background:var(--accent);padding:17px 24px 17px 26px;border-radius:99px;transition:background .35s,transform .35s cubic-bezier(.2,.7,.2,1)}
+.btn:hover{background:#0a3f33;transform:translateY(-1px)}
+.btn svg{width:15px;height:15px;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.btn:hover svg{transform:translateX(4px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink);background:transparent}
+
+/* sections */
+.sec{position:relative;min-height:118vh;padding:16vh var(--pad);display:grid;align-items:center}
+.col{width:min(44vw,640px)}
+.right .col{justify-self:end}
+.wide .col{width:min(56vw,860px)}
+.rv{opacity:0;transform:translateY(14px);transition:opacity 1s cubic-bezier(.2,.6,.2,1),transform 1.1s cubic-bezier(.2,.6,.2,1)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+
+/* hero */
+#hero{min-height:100vh;height:100vh;padding:0 var(--pad);align-items:stretch;display:block}
+#hero h1{position:absolute;left:calc(var(--pad) - .045em);top:11vh;font-size:min(29vw,49vh);line-height:.9;letter-spacing:-.03em}
+#hero .under{position:absolute;left:var(--pad);top:calc(11vh + min(29vw,49vh)*.9 + 2.2vh);display:grid;grid-template-columns:auto;gap:20px;width:min(52vw,740px)}
+#hero .lead{max-width:none}
+#hero .eyebrow{margin:0}
+.hint{position:absolute;right:var(--pad);bottom:34px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:12px}
+.hint i{display:block;width:1px;height:34px;background:linear-gradient(var(--ink3),transparent);animation:drop 2.6s cubic-bezier(.6,0,.3,1) infinite;transform-origin:top}
+@keyframes drop{0%{transform:scaleY(0)}55%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+/* facts row */
+.facts{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:0 42px;margin-top:40px;padding-top:22px;border-top:1px solid var(--line)}
+.facts div{font-size:13px;color:var(--ink3);line-height:1.35}
+.facts strong{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;color:var(--ink);letter-spacing:-.01em}
+
+/* pinned sections */
+.tall{height:250vh;padding-top:0;padding-bottom:0;display:block;min-height:0}
+.pin{position:sticky;top:0;height:100vh;display:grid;align-items:center;padding:12vh 0}
+ol.steps{list-style:none;counter-reset:s;margin-top:8px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:54px 1fr;padding:17px 0;border-top:1px solid var(--line);transition:opacity .6s;opacity:.36}
+ol.steps li:last-child{border-bottom:1px solid var(--line)}
+ol.steps li::before{content:"0" counter(s);font-size:12px;font-weight:500;letter-spacing:.14em;color:var(--accent);padding-top:7px;font-variant-numeric:tabular-nums}
+ol.steps li.on{opacity:1}
+ol.steps h3{font-family:var(--serif);font-weight:400;font-size:27px;line-height:1.15;letter-spacing:-.01em}
+ol.steps p{font-size:15.5px;color:var(--ink2);margin-top:4px;max-width:30em}
+.dose{margin-top:22px;font-size:14.5px;color:var(--ink2)}
+
+@media (min-width:761px){
+  #use .pin{display:block;padding:0}
+  #use .col{width:auto;height:100vh;position:relative}
+  #use .eyebrow{position:absolute;top:13vh;left:0}
+  #use h2{position:absolute;top:calc(13vh + 42px);left:0;margin:0}
+  #use ol.steps{position:absolute;left:0;right:0;top:62vh;display:grid;grid-template-columns:repeat(4,1fr);margin:0}
+  #use ol.steps li{display:block;padding:20px 30px 0 0;border-bottom:0}
+  #use ol.steps li::before{display:block;padding:0;margin-bottom:12px}
+  #use .dose{position:absolute;left:0;bottom:5.5vh;margin:0}
+  #use .dose br{display:none}
+}
+/* expect */
+#expect .pin{align-items:start;padding-top:10.5vh}
+#expect .col{width:auto}
+#expect h2{margin-bottom:10px}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;position:relative}
+.tl::before{content:"";position:absolute;left:0;right:0;top:5px;height:1px;background:var(--line)}
+.tl .bar{position:absolute;left:0;top:5px;height:1px;background:var(--accent);width:calc(var(--p,0)*100%)}
+.tl div.t{padding:22px 28px 0 0;position:relative;opacity:.36;transition:opacity .7s}
+.tl div.t.on{opacity:1}
+.tl div.t::before{content:"";position:absolute;left:0;top:1px;width:9px;height:9px;border-radius:50%;background:var(--stone);border:1px solid var(--ink3);transition:background .5s,border-color .5s}
+.tl div.t.on::before{background:var(--accent);border-color:var(--accent)}
+.tl h3{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;letter-spacing:-.01em;margin-bottom:6px}
+.tl p{font-size:15px;line-height:1.5;color:var(--ink2);max-width:19em}
+.cap{position:absolute;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .8s;pointer-events:none}
+.cap::before{content:"";display:inline-block;width:22px;height:1px;background:var(--ink3);vertical-align:middle;margin-right:10px}
+.cap.in{opacity:1}
+
+/* safety */
+.safe{display:grid;grid-template-columns:1fr 1fr;gap:38px 46px;margin-top:8px}
+.safe h3{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.safe ul{list-style:none}
+.safe li{padding:10px 0;border-bottom:1px solid var(--line);font-size:16.5px;line-height:1.42;color:var(--ink)}
+.safe .stop h3{color:var(--ink)}
+.safe .note{grid-column:1/-1;font-size:16.5px;color:var(--ink2);max-width:44em}
+
+/* buy */
+.packs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.pack{background:rgba(241,242,238,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(16,32,27,.1);border-radius:6px;padding:24px 22px 22px;display:flex;flex-direction:column;min-height:300px;transition:border-color .4s,transform .5s cubic-bezier(.2,.7,.2,1)}
+.pack:hover{border-color:var(--accent);transform:translateY(-3px)}
+.pack small{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.pack h3{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1;letter-spacing:-.015em;margin:14px 0 8px}
+.pack p{font-size:14.5px;color:var(--ink2);line-height:1.45}
+.pack .price{margin-top:auto;padding-top:22px;font-size:15px;color:var(--ink)}
+.pack a{margin-top:14px;font-size:14px;font-weight:500;color:var(--accent);text-decoration:none;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px}
+.pack a span{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.pack a:hover span{transform:translateX(4px)}
+.deliv{margin-top:26px;font-size:15px;color:var(--ink2);max-width:46em}
+
+/* faq */
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:0 46px}
+.qa div{padding:20px 0 22px;border-top:1px solid var(--line)}
+.qa h3{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.15;letter-spacing:-.008em;margin-bottom:8px}
+.qa p{font-size:15.5px;color:var(--ink2)}
+
+/* footer */
+footer{position:relative;padding:15vh var(--pad) 34vh;min-height:100vh;display:grid;align-content:start}
+footer .big .ln{display:block;width:fit-content;white-space:nowrap}
+footer .big{font-family:var(--serif);font-size:clamp(40px,4.6vw,84px);line-height:1;letter-spacing:-.018em;max-width:14em;margin-bottom:5vh}
+footer .big em{font-style:italic;color:var(--accent)}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1.3fr;gap:44px;border-top:1px solid var(--line);padding-top:28px;font-size:14.5px;color:var(--ink2);line-height:1.6;max-width:1180px}
+.fgrid h4{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.fgrid a{text-decoration:none;border-bottom:1px solid var(--line)}
+.med{margin-top:36px;max-width:1180px;border:1px solid var(--accent);border-radius:6px;padding:20px 24px;font-size:16px;color:var(--ink);background:rgba(241,242,238,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.med b{font-weight:500;color:var(--accent)}
+.tiny{margin-top:22px;font-size:12.5px;color:var(--ink3)}
+
+@media (max-width:760px){
+  body{font-size:16px}
+  nav{padding:16px 20px}
+  .navr a{display:none}
+  .mark{font-size:23px}
+  #scroll{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent calc(var(--ledge) - 4px),#000 calc(var(--ledge) + 5vh));mask-image:linear-gradient(to bottom,transparent 0,transparent calc(var(--ledge) - 4px),#000 calc(var(--ledge) + 5vh))}
+  .sec{min-height:0;padding:0 20px 22vh;display:block}
+  .sec .col,.wide .col,#expect .col{width:100%}
+  .tall{height:auto}
+  .pin{position:static;height:auto;display:block;padding:0}
+  #expect .pin{padding-top:0}
+  h2{font-size:clamp(40px,12.4vw,60px);margin-bottom:22px}
+  #hero{height:100svh;min-height:100svh;padding:0}
+  #hero h1{left:16px;top:9svh;font-size:46.5vw}
+  #hero .under{left:20px;right:20px;width:auto;top:auto;bottom:max(26px,4svh);gap:16px}
+  #hero .lead{font-size:18px}
+  .hint{display:none}
+  .btn{padding:15px 20px 15px 22px}
+  .facts{grid-template-columns:repeat(3,auto);gap:0 22px}
+  .facts strong{font-size:27px}
+  ol.steps li{opacity:1;grid-template-columns:44px 1fr}
+  .tl{grid-template-columns:1fr;margin-top:18px}
+  .tl::before,.tl .bar{left:4px;right:auto;top:0;bottom:0;width:1px;height:auto}
+  .tl .bar{display:none}
+  .tl div.t{opacity:1;padding:0 0 26px 30px}
+  .tl div.t::before{top:8px;background:var(--accent);border-color:var(--accent)}
+  .tl p{max-width:none}
+  .cap{display:none}
+  .safe{grid-template-columns:1fr;gap:30px}
+  .packs{grid-template-columns:1fr}
+  .pack{min-height:0;padding:20px}
+  .pack h3{font-size:34px;margin:8px 0 6px}
+  .pack .price{padding-top:14px}
+  .qa{grid-template-columns:1fr}
+  footer{padding:0 20px 16vh;min-height:0}
+  .fgrid{grid-template-columns:1fr;gap:26px}
+}
+@media (prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<nav>
+  <a class="mark" href="#hero">Minox<i>Pak</i></a>
+  <div class="navr">
+    <a href="#what">What it is</a>
+    <a href="#use">How to use</a>
+    <a href="#safety">Safety</a>
+    <a href="#buy">Buy</a>
+    <button id="sound" type="button" aria-pressed="false"><span class="dot"></span><span class="lbl">Enable sound</span></button>
+  </div>
+</nav>
+
+<div id="scroll" tabindex="0">
+<main>
+
+<section class="sec" id="hero" data-pose="hero">
+  <h1><span class="ln gl" data-hero>Mist</span></h1>
+  <div class="under">
+    <div class="eyebrow">MinoxPak <b>Topical minoxidil spray, 60 ml</b></div>
+    <p class="lead">A fine spray of minoxidil for pattern hair loss, made for and sold in Pakistan. It works slowly, and only for as long as you keep using it.</p>
+    <div><a class="btn" href="#buy">Choose a pack <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg></a></div>
+  </div>
+  <div class="hint"><i></i>Scroll</div>
+</section>
+
+<section class="sec right" id="what" data-pose="what">
+  <div class="col">
+    <div class="eyebrow rv"><b>01</b> What it is</div>
+    <h2><span class="ln gl">One medicine,</span><span class="ln gl"><em>plainly</em> stated.</span></h2>
+    <p class="lead rv">MinoxPak is minoxidil in a clear solution, delivered as a measured spray to the scalp. It is used for androgenetic alopecia: the common, inherited pattern of thinning in men and women.</p>
+    <p class="body rv d1">Minoxidil prolongs the growth phase of the hair follicle, so that hairs which had become short and fine can grow for longer. Exactly how it does this is not fully known, and we would rather say so than pretend.</p>
+    <p class="body rv d2">It is a treatment, not a cure. It does not work for every kind of hair loss, and it does not work for everyone.</p>
+    <div class="facts rv d3">
+      <div><strong>5%</strong>w/v, for men</div>
+      <div><strong>2%</strong>w/v, for women</div>
+      <div><strong>60 ml</strong>per bottle</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec tall" id="use" data-pose="use">
+  <div class="pin">
+    <div class="col">
+      <div class="eyebrow"><b>02</b> How to use</div>
+      <h2><span class="ln gl">A small ritual,</span><span class="ln gl"><em>twice</em> a day.</span></h2>
+      <ol class="steps">
+        <li><div><h3>Start with a dry scalp.</h3><p>Hair and scalp fully dry. Part the hair so that you can see the thinning area.</p></div></li>
+        <li><div><h3>Spray on the thinning area.</h3><p>Lift the cap and press the pump. Aim at the scalp, not at the hair.</p></div></li>
+        <li><div><h3>Spread with your fingertips.</h3><p>Lightly, over the thinning area only. Then wash your hands with soap and water.</p></div></li>
+        <li><div><h3>Let it dry.</h3><p>Leave it to dry fully before you go to bed, wear a cap or style your hair. Do not wash it out for a few hours.</p></div></li>
+      </ol>
+      <p class="dose">Dose, as on the label: <span class="ph">[dose per application]</span>, <span class="ph">[times per day]</span>. More spray does not work faster. It only raises the chance of side effects.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec tall wide" id="expect" data-pose="expect">
+  <div class="pin">
+    <div class="col">
+      <div class="eyebrow"><b>03</b> What to expect</div>
+      <h2><span class="ln gl">It works at the root,</span><span class="ln gl">and at the <em>speed of hair.</em></span></h2>
+      <div class="tl">
+        <span class="bar"></span>
+        <div class="t"><h3>The first weeks</h3><p>Some extra shedding can happen as older hairs make way. It is a normal part of the process and it passes.</p></div>
+        <div class="t"><h3>The quiet months</h3><p>Nothing much to see. The work is under the skin, in the follicle. The only task is to keep the routine.</p></div>
+        <div class="t"><h3>About month four</h3><p>For most people who respond, this is when results usually begin to show. Not before, and not for everyone.</p></div>
+        <div class="t"><h3>As long as you use it</h3><p>The effect lasts only while you keep using it. If you stop, the regrown hair is gradually lost over the following months.</p></div>
+      </div>
+    </div>
+    <span class="cap" data-cap="0">Scalp surface</span>
+    <span class="cap" data-cap="1">Hair follicle</span>
+    <span class="cap" data-cap="2">Follicle bulb, where growth starts</span>
+  </div>
+</section>
+
+<section class="sec right wide" id="safety" data-pose="safety">
+  <div class="col">
+    <div class="eyebrow rv"><b>04</b> Safety</div>
+    <h2><span class="ln gl">Read this part</span><span class="ln gl"><em>as carefully</em> as the rest.</span></h2>
+    <div class="safe">
+      <div class="rv">
+        <h3>Do not use it</h3>
+        <ul>
+          <li>Anywhere but the scalp. It is for external use only.</li>
+          <li>On red, inflamed, irritated or broken scalp skin.</li>
+          <li>If you are pregnant or breastfeeding.</li>
+          <li>If you are under 18.</li>
+          <li>Near the eyes. If it gets in, rinse well with cool water.</li>
+        </ul>
+      </div>
+      <div class="rv d1 stop">
+        <h3>Stop and see a doctor if you notice</h3>
+        <ul>
+          <li>Chest pain or a fast heartbeat.</li>
+          <li>Dizziness or feeling faint.</li>
+          <li>Sudden, unexplained weight gain.</li>
+          <li>Swelling of the hands or feet.</li>
+          <li>Scalp irritation that does not settle.</li>
+        </ul>
+      </div>
+      <p class="note rv d2">Talk to a doctor or pharmacist before you start if you have heart disease or low blood pressure, or if you take medicine for either. Keep the bottle away from children. Keep it, and freshly treated skin, away from pets, especially cats: minoxidil is dangerous to them. Mild itching or dryness of the scalp is the most common unwanted effect.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec wide" id="buy" data-pose="buy">
+  <div class="col">
+    <div class="eyebrow rv"><b>05</b> Buy</div>
+    <h2><span class="ln gl">Enough for the wait,</span><span class="ln gl"><em>not more.</em></span></h2>
+    <div class="packs">
+      <div class="pack rv">
+        <small>1 bottle</small><h3>One month</h3>
+        <p>To see how your scalp takes to it. Too short to judge the result.</p>
+        <div class="price"><span class="ph">[price PKR]</span></div>
+        <a href="https://wa.me/923103699935?text=I%20would%20like%20to%20order%20the%20one-month%20MinoxPak%20pack." rel="noopener">Order on WhatsApp <span>&rarr;</span></a>
+      </div>
+      <div class="pack rv d1">
+        <small>3 bottles</small><h3>Three months</h3>
+        <p>Covers the first shedding and most of the quiet months.</p>
+        <div class="price"><span class="ph">[price PKR]</span></div>
+        <a href="https://wa.me/923103699935?text=I%20would%20like%20to%20order%20the%20three-month%20MinoxPak%20pack." rel="noopener">Order on WhatsApp <span>&rarr;</span></a>
+      </div>
+      <div class="pack rv d2">
+        <small>6 bottles</small><h3>Six months</h3>
+        <p>Past month four, with time to see whether it is working for you.</p>
+        <div class="price"><span class="ph">[price PKR]</span></div>
+        <a href="https://wa.me/923103699935?text=I%20would%20like%20to%20order%20the%20six-month%20MinoxPak%20pack." rel="noopener">Order on WhatsApp <span>&rarr;</span></a>
+      </div>
+    </div>
+    <p class="deliv rv d3">Delivery anywhere in Pakistan in <span class="ph">[delivery time]</span>, <span class="ph">[delivery charge PKR]</span>. Payment by <span class="ph">[payment methods]</span>. Every pack comes with the leaflet. Tell us on WhatsApp whether you need the 5% or the 2% strength.</p>
+  </div>
+</section>
+
+<section class="sec right wide" id="questions" data-pose="questions">
+  <div class="col">
+    <div class="eyebrow rv"><b>06</b> Questions</div>
+    <h2><span class="ln gl">Short answers,</span><span class="ln gl"><em>no surprises.</em></span></h2>
+    <div class="qa">
+      <div class="rv"><h3>Will it work for me?</h3><p>It may. Minoxidil helps many people with pattern hair loss, but not all of them, and nobody can tell you in advance. Give it about four months of steady use before you judge.</p></div>
+      <div class="rv d1"><h3>Is it a cure?</h3><p>No. It treats pattern hair loss for as long as you use it. It does not help hair loss caused by illness, medicines, diet or scarring.</p></div>
+      <div class="rv"><h3>Why am I shedding more?</h3><p>In the first weeks some hairs fall earlier than they would have, to be replaced by new growth. If it is heavy or it does not ease, ask a doctor.</p></div>
+      <div class="rv d1"><h3>Can I use more to speed it up?</h3><p>No. Using more, or using it more often, does not improve the result. It only makes side effects more likely.</p></div>
+      <div class="rv"><h3>What if I miss a dose?</h3><p>Carry on with the next one at the usual time. Do not double it to make up.</p></div>
+      <div class="rv d1"><h3>Which strength is for whom?</h3><p>The 5% is for men and the 2% is for women. Do not use either if you are pregnant or breastfeeding. If you are unsure, ask a pharmacist.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer" data-pose="footer">
+  <p class="big"><span class="ln gl">A fine mist.</span><span class="ln gl">A long <em>patience.</em></span></p>
+  <div class="fgrid">
+    <div>
+      <h4>Company</h4>
+      <span class="ph">[company legal name]</span><br>
+      <span class="ph">[company address]</span><br>
+      Manufactured by <span class="ph">[manufacturer name and licence no.]</span>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      WhatsApp <a href="https://wa.me/923103699935" rel="noopener">+92 310 3699935</a><br>
+      <span class="ph">[email address]</span><br>
+      <span class="ph">[support hours]</span>
+    </div>
+    <div>
+      <h4>Regulatory</h4>
+      MinoxPak (minoxidil topical solution) <span class="ph">[strength: 5% w/v]</span>.<br>
+      DRAP registration no. <span class="ph">[DRAP registration no.]</span><br>
+      <span class="ph">[storage conditions as on the label]</span>
+    </div>
+  </div>
+  <p class="med"><b>MinoxPak is a medicine.</b> Read the leaflet in the pack before you use it, and follow it. For external use on the scalp only. If you are unsure whether it is right for you, ask a doctor or pharmacist first.</p>
+  <p class="tiny">&copy; <span class="ph">[year]</span> <span class="ph">[company legal name]</span>. The information on this page does not replace the advice of a doctor or pharmacist.</p>
+</footer>
+
+</main>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
