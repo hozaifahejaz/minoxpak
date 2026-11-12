@@ -145,6 +145,19 @@ header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--
 .facts span{color:var(--muted);font-size:.95rem}
 @media (max-width:700px){.facts{grid-template-columns:1fr;gap:18px}}
 
+/* trust */
+.trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,48px) clamp(32px,5vw,64px)}
+@media (max-width:700px){.trust{grid-template-columns:1fr;gap:26px}}
+#trust{padding-top:clamp(24px,4vw,56px)}
+.trust > div[hidden]{display:none}
+.trust > div{display:grid;grid-template-columns:44px 1fr;gap:4px 16px;align-items:start}
+.trust .ic{grid-row:span 2;width:44px;height:44px;border-radius:14px;background:var(--tint);color:var(--brand);display:grid;place-items:center}
+.trust b{font-family:var(--f-display);font-weight:600;letter-spacing:-.01em;line-height:1.35}
+.trust p{color:var(--muted);font-size:.95rem}
+.guides{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.guides a{border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;text-decoration:none;font-weight:500;font-size:.92rem;color:var(--ink)}
+.guides a:hover{border-color:var(--brand)}
+
 /* how to use */
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,72px)}
 @media (max-width:760px){.cols{grid-template-columns:1fr}}
@@ -228,6 +241,13 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
 .co label{display:grid;gap:6px;font-size:.88rem;font-weight:500;color:var(--muted)}
 .co input,.co select,.co textarea{font:inherit;font-size:1rem;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;width:100%}
 .co input:focus,.co select:focus,.co textarea:focus{outline:none;border-color:var(--brand)}
+.pay{border:0;margin:0;padding:0;display:grid;gap:8px}
+.pay legend{font-size:.88rem;font-weight:500;color:var(--muted);padding:0;margin-bottom:6px}
+.pay label{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;color:var(--ink);font-size:.98rem;font-weight:500}
+.pay label:has(input:checked){border-color:var(--brand)}
+.pay input{width:20px;height:20px;margin:0;accent-color:var(--brand)}
+.pay small{display:block;color:var(--muted);font-weight:400;font-size:.86rem}
+.pay .save{color:var(--brand);font-weight:600}
 .err{color:#B3301C;font-size:.88rem;font-weight:600}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#FF9C8C}}
 :root[data-theme="dark"] .err{color:#FF9C8C}
@@ -259,6 +279,8 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
 .toast{position:fixed;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:500;font-size:.92rem;opacity:0;transition:.25s;z-index:95;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
+<script src="config.js"></script>
+<script src="analytics.js" defer></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"https://minoxpak.onrender.com/#org","name":"Minoxpak","url":"https://minoxpak.onrender.com/","logo":"https://minoxpak.onrender.com/favicon.svg","contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":"+923103699935","areaServed":"PK","availableLanguage":["en","ur"]}},
@@ -275,7 +297,8 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
 {"@type":"Question","name":"Is shedding in the first weeks normal?","acceptedAnswer":{"@type":"Answer","text":"Yes. Minoxidil pushes out old resting hairs so stronger new ones can grow. It usually settles within 2 months."}},
 {"@type":"Question","name":"Should I choose 5% or 2%?","acceptedAnswer":{"@type":"Answer","text":"5% is the standard strength for men. 2% is commonly recommended for women."}},
 {"@type":"Question","name":"What happens if I stop?","acceptedAnswer":{"@type":"Answer","text":"Minoxidil works while you use it. If you stop, hair it helped regrow gradually sheds over the following months."}},
-{"@type":"Question","name":"How do delivery and payment work?","acceptedAnswer":{"@type":"Answer","text":"We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives. Delivery is free over Rs. 3,000 and Rs. 250 below that."}}
+{"@type":"Question","name":"How do delivery and payment work?","acceptedAnswer":{"@type":"Answer","text":"We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives, or pay upfront by JazzCash, Easypaisa or bank transfer and get Rs. 200 off. Delivery is free over Rs. 3,000 and Rs. 250 below that."}},
+{"@type":"Question","name":"How do I know it is original?","acceptedAnswer":{"@type":"Answer","text":"Every bottle is sealed with its batch number and expiry date printed on the box. You can open the parcel and check it in front of the rider before you pay."}}
 ]}
 ]}
 </script>
@@ -345,6 +368,22 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
     </div>
   </section>
 
+  <!-- TRUST -->
+  <section id="trust" class="trust-sec">
+    <div class="wrap">
+      <div class="head center">
+        <h2>Original, sealed, and checked by you</h2>
+        <p class="lede">Hair loss products are often faked. Here is how you know a Minoxpak bottle is the real thing.</p>
+      </div>
+      <div class="trust">
+        <div><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span><b>Sealed bottles, batch and expiry printed</b><p>Every box carries a batch number and expiry date. If the seal is broken, do not accept it.</p></div>
+        <div><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg></span><b>Check before you pay</b><p>You can open the parcel and check the seal and expiry in front of the rider. Pay only if you are happy.</p></div>
+        <div id="drapRow" hidden><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><b>DRAP registered</b><p>Registration no. <span id="drapNo"></span>, printed on every box.</p></div>
+        <div><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg></span><b>A real person on WhatsApp</b><p>We confirm every order ourselves and answer questions before and after you buy.</p></div>
+        <div><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><b>Damaged or wrong? We replace it</b><p>Send us a photo within 7 days and we replace it or refund you. <a href="policies.html#returns" style="color:var(--brand)">Returns policy</a></p></div>
+      </div>
+    </div>
+  </section>
   <!-- HOW TO USE -->
   <section id="use" style="padding-top:0">
     <div class="wrap">
@@ -400,10 +439,12 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
         <details><summary>Should I choose 5% or 2%?</summary><p>5% is the standard strength for men. 2% is commonly recommended for women. The quiz will suggest one, and your doctor or pharmacist can advise too.</p></details>
         <details><summary>Why a spray and not a dropper or oil?</summary><p>A fine mist covers the scalp evenly, measures the dose for you and dries without dripping. Minoxidil is clinically proven to regrow hair. Oils and shampoos are not.</p></details>
         <details><summary>What happens if I stop?</summary><p>Minoxidil works while you use it. If you stop, hair it helped regrow gradually sheds over the following months.</p></details>
+        <details><summary>How do I know it is original?</summary><p>Every bottle is sealed with its batch number and expiry date printed on the box. You can open the parcel and check it in front of the rider before you pay.</p></details>
         <details><summary>Is it a subscription?</summary><p>No. Each pack is a one-time purchase. A 3 or 6 month pack simply ships all the bottles together at a lower price per bottle.</p></details>
         <details><summary>Are there side effects?</summary><p>Some people get mild itching, dryness or flaking. Stop use and see a doctor if you feel dizzy or have chest pain or a fast heartbeat. Not for use during pregnancy or breastfeeding.</p></details>
-        <details><summary>How do delivery and payment work?</summary><p>We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives. Delivery is free over Rs. 3,000 and Rs. 250 below that. We confirm every order on WhatsApp before it ships. See <a href="policies.html#shipping">shipping and returns</a>.</p></details>
+        <details><summary>How do delivery and payment work?</summary><p>We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives, or pay upfront by JazzCash, Easypaisa or bank transfer and get Rs. 200 off. Delivery is free over Rs. 3,000 and Rs. 250 below that. We confirm every order on WhatsApp before it ships. See <a href="policies.html#shipping">shipping and returns</a>.</p></details>
       </div>
+      <nav class="guides" aria-label="Guides"><a href="minoxidil-5-vs-2.html">5% or 2%?</a><a href="minoxidil-side-effects.html">Side effects</a><a href="minoxidil-price-pakistan.html">Price in Pakistan</a><a href="minoxidil-for-beard.html">Minoxidil for beard</a></nav>
       <p class="fine" style="margin-top:24px">Something else? <a href="https://wa.me/923103699935?text=Hi%20Minoxpak%2C%20I%20have%20a%20question" target="_blank" rel="noopener" style="color:var(--brand)">Message us on WhatsApp</a> and a person will reply.</p>
     </div>
   </section>
@@ -415,6 +456,7 @@ footer.site{border-top:1px solid var(--line);padding-block:48px calc(40px + env(
       <a href="#top" class="logo"><span class="logo-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#leaf"/></svg></span><span>minoxpak</span></a>
       <nav aria-label="Footer">
         <a href="https://wa.me/923103699935" target="_blank" rel="noopener">WhatsApp +92 310 3699935</a>
+        <a href="minoxidil-5-vs-2.html">Guides</a>
         <a href="policies.html#shipping">Shipping and returns</a>
         <a href="policies.html#privacy">Privacy</a>
       </nav>
@@ -459,9 +501,12 @@ const PRODUCTS=[
 const rs=n=>'Rs. '+n.toLocaleString('en-PK');
 const $=s=>document.querySelector(s);
 const waLink=t=>`https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
-// Analytics hook: events queue here until a tag manager or pixel is added.
+// Analytics: events go to window.dataLayer, and analytics.js forwards them to GA4 and the Meta Pixel when config.js has their IDs.
 window.dataLayer=window.dataLayer||[];
-const track=(event,data={})=>window.dataLayer.push({event,...data});
+const track=(event,data={})=>{const d={event,...data};window.dataLayer.push(d);try{window.mxSend&&window.mxSend(d);}catch(e){}};
+const CFG=window.MINOXPAK||{}, PREPAID_OFF=Math.max(0,Number(CFG.prepaidDiscount)||0);
+if(CFG.drapNo){$('#drapNo').textContent=CFG.drapNo;$('#drapRow').hidden=false;}
+{const sh=$('#shop');if(sh&&'IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){track('view_plans');io.disconnect();}},{threshold:.3});io.observe(sh);}}
 const P=id=>PRODUCTS.find(p=>p.id===id);
 const thumb=p=>p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<svg width="26" height="32" aria-hidden="true"><use href="#roller"/></svg>`;
 const perMonth=p=>p.months>1?`${rs(Math.round(p.price/p.months))} a month${p.was?`<i> · </i><b>save ${Math.round((1-p.price/p.was)*100)}%</b>`:''}`:'';
@@ -592,9 +637,9 @@ function addToCart(id,withRoller){
   if(withRoller&&!cart.find(x=>x.id==='roller')) cart.push({id:'roller',q:1});
   step='cart';placed=null;save();render();track('add_to_cart',{id,price:P(id).price});openCart();
 }
-const totals=()=>{const sub=cart.reduce((a,l)=>a+P(l.id).price*l.q,0),ship=sub>=FREE_SHIP?0:SHIP_FEE;return {sub,ship,total:sub+ship,n:cart.reduce((a,l)=>a+l.q,0)};};
+const totals=()=>{const sub=cart.reduce((a,l)=>a+P(l.id).price*l.q,0),ship=sub>=FREE_SHIP?0:SHIP_FEE,off=form.pay==='prepaid'&&cart.length?PREPAID_OFF:0;return {sub,ship,off,total:sub+ship-off,n:cart.reduce((a,l)=>a+l.q,0)};};
 function render(){
-  const {sub,ship,total,n}=totals();
+  const {sub,ship,off,total,n}=totals();
   $('#cartCount').textContent=n||'';
   const body=$('#cartBody'),foot=$('#cartFoot');
   $('#cartBack').hidden=step!=='form';
@@ -602,7 +647,7 @@ function render(){
   foot.hidden=false;
   if(step==='done'&&placed){
     body.innerHTML=`<div class="ok" role="status" tabindex="-1"><h3>Send the WhatsApp message to confirm</h3>
-      <p>Order ${placed.ref} · ${rs(placed.total)} · cash on delivery</p>
+      <p>Order ${placed.ref} · ${rs(placed.total)} · ${placed.prepaid?'pay now (we send account details)':'cash on delivery'}</p>
       <ul>${placed.lines.map(l=>`<li>${l}</li>`).join('')}</ul>
       <p>WhatsApp should have opened with your order filled in. Press send there and we will reply to confirm it.</p></div>`;
     foot.innerHTML=`<a class="btn btn-accent btn-block" target="_blank" rel="noopener" href="${placed.url}">Open WhatsApp to send order</a><button class="tlink" id="cont">Continue shopping</button>`;
@@ -611,19 +656,24 @@ function render(){
   if(!cart.length){step='cart';body.innerHTML=`<p class="empty">Your cart is empty.</p>`;foot.innerHTML=`<button class="btn btn-accent btn-block" data-quiz>Find my plan</button>`;return;}
   if(step==='form'){
     const v=k=>(form[k]||'').replace(/"/g,'&quot;');
-    body.innerHTML=`<div class="sum"><span>${n} item${n>1?'s':''} · ${ship?`delivery ${rs(ship)}`:'free delivery'}</span><b>${rs(total)}</b></div>
+    body.innerHTML=`<div class="sum"><span>${n} item${n>1?'s':''} · ${ship?`delivery ${rs(ship)}`:'free delivery'}${off?` · ${rs(off)} off`:''}</span><b id="sumTotal">${rs(total)}</b></div>
     <form class="co" id="co" novalidate>
       <label for="co-name">Full name<input id="co-name" required autocomplete="name" maxlength="80" value="${v('name')}"></label>
       <label for="co-phone">Mobile number<input id="co-phone" type="tel" required inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel" maxlength="16" aria-describedby="co-err" value="${v('phone')}"></label>
       <label for="co-city">City<select id="co-city" required><option value="">Select city</option>${['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Multan','Peshawar','Quetta','Hyderabad','Sialkot','Gujranwala'].map(c=>`<option${form.city===c?' selected':''}>${c}</option>`).join('')}<option value="Other"${form.city==='Other'?' selected':''}>Other city</option></select></label>
       <label for="co-city2" id="co-city2-wrap" ${form.city==='Other'?'':'hidden'}>City name<input id="co-city2" autocomplete="address-level2" maxlength="60" value="${v('city2')}"></label>
       <label for="co-addr">Full address<textarea id="co-addr" rows="3" required autocomplete="street-address" maxlength="300">${(form.addr||'').replace(/</g,'&lt;')}</textarea></label>
+      ${PREPAID_OFF?`<fieldset class="pay"><legend>How will you pay?</legend>
+        <label><input type="radio" name="pay" value="cod" ${form.pay!=='prepaid'?'checked':''}><span>Cash on delivery<small>Pay the rider when it arrives.</small></span></label>
+        <label><input type="radio" name="pay" value="prepaid" ${form.pay==='prepaid'?'checked':''}><span>Pay now, <span class="save">save ${rs(PREPAID_OFF)}</span><small>JazzCash, Easypaisa or bank transfer. We send the account details on WhatsApp.</small></span></label>
+      </fieldset>`:''}
       <span class="err" id="co-err" role="alert"></span>
     </form>`;
-    foot.innerHTML=`<button class="btn btn-accent btn-block" type="submit" form="co">Order on WhatsApp</button><span class="note">Cash on delivery. You pay nothing until it arrives.</span>`;
+    foot.innerHTML=`<button class="btn btn-accent btn-block" type="submit" form="co">Order on WhatsApp</button><span class="note" id="payNote">${off?'We will send payment details on WhatsApp.':'Cash on delivery. You pay nothing until it arrives.'}</span>`;
     $('#co-city').onchange=e=>{$('#co-city2-wrap').hidden=e.target.value!=='Other';};
     $('#co').addEventListener('submit',placeOrder);
-    $('#co').addEventListener('input',()=>{$('#co-err').textContent='';form={name:$('#co-name').value,phone:$('#co-phone').value,city:$('#co-city').value,city2:$('#co-city2').value,addr:$('#co-addr').value};});
+    $('#co').addEventListener('input',()=>{$('#co-err').textContent='';form={name:$('#co-name').value,phone:$('#co-phone').value,city:$('#co-city').value,city2:$('#co-city2').value,addr:$('#co-addr').value,pay:($('#co [name=pay]:checked')||{}).value};});
+    $('#co').addEventListener('change',e=>{if(e.target.name!=='pay')return;const t=totals();$('.sum span').textContent=`${t.n} item${t.n>1?'s':''} · ${t.ship?`delivery ${rs(t.ship)}`:'free delivery'}${t.off?` · ${rs(t.off)} off`:''}`;$('#sumTotal').textContent=rs(t.total);$('#payNote').textContent=t.off?'We will send payment details on WhatsApp.':'Cash on delivery. You pay nothing until it arrives.';});
     return;
   }
   const up=cart.length===1&&cart[0].q===1&&P(cart[0].id).up&&P(P(cart[0].id).up);
@@ -638,6 +688,11 @@ function render(){
   $('#toForm').onclick=()=>{step='form';render();track('begin_checkout',{total});$('#co-name').focus({preventScroll:true});};
 }
 const cleanPhone=v=>{const d=v.replace(/[\s\-().]/g,'').replace(/^(\+|00)?92/,'0');return /^03\d{9}$/.test(d)?d:null;};
+// Also saves the order to the Google Sheet (config.js orderEndpoint), so it is not lost if the customer never sends the WhatsApp message.
+function saveOrder(o){
+  if(!CFG.orderEndpoint) return;
+  try{fetch(CFG.orderEndpoint,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)}).catch(()=>{});}catch(e){}
+}
 function placeOrder(e){
   e.preventDefault();
   const err=m=>{$('#co-err').textContent=m;};
@@ -647,14 +702,16 @@ function placeOrder(e){
   if(!phone){err('Please enter a valid mobile number, like 0310 1234567.');$('#co-phone').focus();return;}
   if(!city){err('Please choose or type your city.');($('#co-city').value==='Other'?$('#co-city2'):$('#co-city')).focus();return;}
   if(addr.length<8){err('Please enter your full delivery address.');$('#co-addr').focus();return;}
-  const {sub,ship,total}=totals();
+  const {sub,ship,off,total}=totals(); const prepaid=off>0;
+  const months=cart.reduce((a,l)=>a+(P(l.id).months||0)*l.q,0);
   const ref='MP-'+Date.now().toString(36).toUpperCase().slice(-6);
   const lines=cart.map(l=>{const p=P(l.id);return `${l.q} × ${p.name} (${p.line}): ${rs(p.price*l.q)}`;});
-  const msg=[`New order ${ref}`,'',...lines,'',`Subtotal: ${rs(sub)}`,`Delivery: ${ship?rs(ship):'Free'}`,`Total: ${rs(total)} (cash on delivery)`,'',`Name: ${name}`,`Mobile: ${phone}`,`City: ${city}`,`Address: ${addr}`].join('\n');
+  const msg=[`New order ${ref}`,'',...lines,'',`Subtotal: ${rs(sub)}`,`Delivery: ${ship?rs(ship):'Free'}`,...(off?[`Pay now discount: -${rs(off)}`]:[]),`Total: ${rs(total)} (${prepaid?'paying now by JazzCash, Easypaisa or bank transfer, please send account details':'cash on delivery'})`,'',`Name: ${name}`,`Mobile: ${phone}`,`City: ${city}`,`Address: ${addr}`].join('\n');
   const url=waLink(msg);
   track('order_placed',{ref,total,items:cart.map(l=>({id:l.id,q:l.q}))});
-  placed={ref,total,lines,url}; cart=[]; step='done'; save(); render();
+  placed={ref,total,lines,url,prepaid}; cart=[]; step='done'; save(); render();
   window.open(url,'_blank','noopener');
+  saveOrder({ref,name,phone,city,addr,lines,months,sub,ship,discount:off,total,payment:prepaid?'Pay now':'Cash on delivery'});
   $('#cartBody .ok').focus({preventScroll:true});
 }
 $('#cartBody').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
