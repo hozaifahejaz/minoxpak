@@ -12,10 +12,23 @@ Open `index.html` in a browser, or serve the folder:
 python3 -m http.server 8000
 ```
 
-## Still to replace before launch
+## How orders work
 
-- Product prices, sizes and bundles
-- Logo and product photos
-- WhatsApp number, email, DRAP registration and pharmacy licence details
-- Customer reviews (current ones are samples)
-- Checkout (currently a demo; no orders are sent anywhere)
+There is no backend. The checkout form builds an order message and opens WhatsApp to +92 310 3699935 with it filled in. The customer presses send, and the order is confirmed by replying there. Nothing is stored on a server.
+
+## Files
+
+- `index.html`: the store (inline CSS and JavaScript)
+- `bottle3d.js`: the 3D bottle in the hero
+- `policies.html`: shipping, returns and privacy
+- `favicon.svg`, `og-image.jpg`, `robots.txt`, `sitemap.xml`: icons, link preview and search engine files
+
+## Still to confirm before launch
+
+- Product prices, sizes and bundles, and that 6 sprays of the real pump equal 1 mL
+- Logo and product photos (the model photos are stock)
+- DRAP registration and pharmacy licence details
+- The shipping, returns and privacy terms in `policies.html`
+- Real customer reviews (the sample reviews were removed)
+- A real domain: the canonical, sitemap and link preview addresses use `minoxpak.onrender.com`
+- Analytics: events are pushed to `window.dataLayer`, but no tag manager or pixel is installed yet
