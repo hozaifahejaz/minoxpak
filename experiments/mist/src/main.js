@@ -39,7 +39,7 @@ const U = {
   uHalf: { value: new THREE.Vector2() },
   uNoz: { value: new THREE.Vector3() }, uNozDir: { value: new THREE.Vector3(-1, 0, 0) },
   uSprayAge: { value: 0 }, uSprayAmt: { value: 1 }, uSettle: { value: 0 }, uStrandN: { value: 1 },
-  uAmb: { value: 1 }, uBeads: { value: 1 }, uFocus: { value: CAMZ }, uDof: { value: 1.1 }, uLen: { value: 1 },
+  uAmb: { value: 1 }, uBeads: { value: 1 }, uFocus: { value: CAMZ }, uDof: { value: 1.1 }, uLen: { value: 1 }, uSprayK: { value: 1 }, uLand: { value: new THREE.Vector2(0, 100) }, uBeadY: { value: -1 },
   uScene: { value: null }, uBg: { value: null },
   uLedge: { value: 0 }, uFadeH: { value: 40 }, uView: { value: new THREE.Vector2(W, H) },
 };
@@ -231,7 +231,7 @@ function rasterType() {
 // ------------------------------------------------------------ droplets
 {
   const k = lite ? .55 : 1;
-  const counts = [Math.round(520 * k), Math.round(1700 * k), Math.round(900 * k), Math.round(70 * k), lite ? 9 : 16];
+  const counts = [Math.round(520 * k), Math.round(2600 * k), Math.round(900 * k), Math.round(150 * k), lite ? 9 : 16];
   const n = counts.reduce((a, b) => a + b, 0);
   const seed = new Float32Array(n * 4); let o = 0;
   counts.forEach((cnt, kind) => { for (let i = 0; i < cnt; i++) { seed[o++] = i + kind * 7919; seed[o++] = kind; seed[o++] = Math.random(); seed[o++] = Math.random(); } });
@@ -245,7 +245,7 @@ function rasterType() {
   g.instanceCount = n;
   const m = new THREE.ShaderMaterial({
     vertexShader: S.DROP_VS, fragmentShader: S.DROP_FS, transparent: true, depthTest: false, depthWrite: false,
-    uniforms: pick('uTime', 'uGrow', 'uShift', 'uAspect', 'uField', 'uPtr', 'uPtrVel', 'uVP', 'uRes', 'uPx', 'uDpr', 'uHalf', 'uNoz', 'uNozDir', 'uSprayAge', 'uSprayAmt', 'uSettle', 'uStrandN', 'uAmb', 'uBeads', 'uFocus', 'uDof', 'uScene', 'uLen'),
+    uniforms: pick('uTime', 'uGrow', 'uShift', 'uAspect', 'uField', 'uPtr', 'uPtrVel', 'uVP', 'uRes', 'uPx', 'uDpr', 'uHalf', 'uNoz', 'uNozDir', 'uSprayAge', 'uSprayAmt', 'uSettle', 'uStrandN', 'uAmb', 'uBeads', 'uFocus', 'uDof', 'uScene', 'uLen', 'uSprayK', 'uLand', 'uBeadY'),
   });
   const drops = new THREE.Mesh(g, m); drops.frustumCulled = false; drops.renderOrder = 2;
   post.add(drops);
@@ -256,23 +256,23 @@ function rasterType() {
 // ------------------------------------------------------------ poses
 const TAU = Math.PI * 2;
 const POSE_D = {
-  hero:      { bx: .37, by: .06, bs: 1.0, yaw: -.42, roll: -.045, cap: 1, gy: -.87, gh: -1.0, grow: 1, settle: .55, reveal: 0, beads: 1, amb: 1 },
+  hero:      { bx: .37, by: .06, bs: 1.0, yaw: -.42, roll: -.045, cap: .8, gy: -.87, gh: -1.0, grow: 1, settle: .55, reveal: 0, beads: 1, amb: 1 },
   what:      { bx: -.47, by: -.02, bs: 1.14, yaw: .28, roll: .03, cap: 0, gy: -1.5, gh: -1.3, grow: 1, settle: .3, reveal: 0, beads: 0, amb: .8 },
-  use:       { bx: .50, by: .47, bs: .58, yaw: TAU - .50, roll: .52, cap: 0, gy: -.08, gh: -.5, grow: 1, settle: 0, reveal: 0, beads: 0, amb: .5 },
+  use:       { bx: .46, by: .49, bs: .58, yaw: TAU - .50, roll: .66, cap: 0, gy: -.08, gh: -.5, grow: 1, settle: 0, reveal: 0, beads: 0, amb: .5 },
   expect:    { bx: .80, by: .50, bs: .40, yaw: TAU + .45, roll: .22, cap: 0, gy: -.32, gh: -.16, grow: .1, settle: .5, reveal: 1, beads: 0, amb: .35 },
   safety:    { bx: -.56, by: -.02, bs: 1.06, yaw: 2 * TAU - .22, roll: -.03, cap: 0, gy: -1.5, gh: -1.2, grow: 1, settle: 0, reveal: 0, beads: 0, amb: .7 },
   buy:       { bx: .60, by: -.02, bs: 1.0, yaw: 2 * TAU + .42, roll: .05, cap: 0, gy: -1.5, gh: -1.2, grow: 1, settle: 0, reveal: 0, beads: 0, amb: .8 },
   questions: { bx: -.60, by: -.02, bs: .92, yaw: 2 * TAU + 2.5, roll: -.06, cap: 0, gy: -1.5, gh: -1.2, grow: 1, settle: 0, reveal: 0, beads: 0, amb: .8 },
-  footer:    { bx: .58, by: .16, bs: .92, yaw: 3 * TAU - .42, roll: -.03, cap: 1, gy: -.64, gh: -1.0, grow: 1, settle: .9, reveal: 0, beads: 0, amb: 1 },
+  footer:    { bx: .58, by: .16, bs: .92, yaw: 3 * TAU - .42, roll: -.03, cap: 1, gy: -.70, gh: -1.0, grow: 1, settle: .9, reveal: 0, beads: 0, amb: 1 },
 };
 const POSE_M = {
   hero:      { bx: .30, by: .17, bs: .60, yaw: -.42, roll: -.05, cap: 1, gy: -.24, gh: -.75, grow: 1, settle: .6, reveal: 0, beads: 1, amb: 1 },
-  what:      { bx: .0, by: .55, bs: .42, yaw: .28, roll: .03, cap: 0, gy: .22, gh: -.5, grow: 1, settle: .4, reveal: 0, beads: 0, amb: .8 },
-  use:       { bx: .40, by: .58, bs: .38, yaw: TAU - .50, roll: .5, cap: 1.1, gy: .22, gh: -.5, grow: 1, settle: .8, reveal: 0, beads: 0, amb: .6 },
+  what:      { bx: .0, by: .57, bs: .42, yaw: .28, roll: .03, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .4, reveal: 0, beads: 0, amb: .8 },
+  use:       { bx: .40, by: .60, bs: .38, yaw: TAU - .50, roll: .5, cap: 1.1, gy: .17, gh: -.5, grow: 1, settle: .8, reveal: 0, beads: 0, amb: .6 },
   expect:    { bx: .52, by: .80, bs: .23, yaw: TAU + .5, roll: 1.0, cap: 1.2, gy: .60, gh: -.14, grow: .1, settle: .5, reveal: 1, beads: 0, amb: .4 },
-  safety:    { bx: -.05, by: .55, bs: .42, yaw: 2 * TAU - .22, roll: -.03, cap: 0, gy: .22, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .7 },
-  buy:       { bx: .1, by: .55, bs: .42, yaw: 2 * TAU + .42, roll: .05, cap: 0, gy: .22, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
-  questions: { bx: -.1, by: .55, bs: .40, yaw: 2 * TAU + 2.5, roll: -.06, cap: 0, gy: .22, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
+  safety:    { bx: -.05, by: .57, bs: .42, yaw: 2 * TAU - .22, roll: -.03, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .7 },
+  buy:       { bx: .1, by: .57, bs: .42, yaw: 2 * TAU + .42, roll: .05, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
+  questions: { bx: -.1, by: .57, bs: .40, yaw: 2 * TAU + 2.5, roll: -.06, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
   footer:    { bx: .28, by: .50, bs: .46, yaw: 3 * TAU - .42, roll: -.03, cap: 1, gy: .12, gh: -.7, grow: 1, settle: .9, reveal: 0, beads: 0, amb: 1 },
 };
 const KEYS = Object.keys(POSE_D.hero);
@@ -307,6 +307,9 @@ function evalPose(y) {
   if (i < secs.length - 1 && y > secs[i].b) e = sstep5(Math.min(1, (y - secs[i].b) / (secs[i + 1].a - secs[i].b)));
   const A = tbl[secs[i].name], B = tbl[secs[Math.min(i + 1, secs.length - 1)].name];
   for (const k of KEYS) P[k] = A[k] + (B[k] - A[k]) * e;
+  // the ground leaves early and arrives late, so that incoming copy never has to cross the strands
+  const eg = B.gy < A.gy ? sstep5(Math.min(1, e * 1.9)) : sstep5(Math.max(0, (e - .4) / .6));
+  if (!mobile()) P.gy = A.gy + (B.gy - A.gy) * eg;
   for (const s of secs) Wt[s.name] = 0;
   Wt[secs[i].name] = 1 - e; if (e > 0) Wt[secs[i + 1].name] = e;
   for (const s of secs) s.p = Math.min(1, Math.max(0, (y - s.a) / Math.max(1, s.b - s.a)));
@@ -394,13 +397,13 @@ function resize() {
   U.uRes.value.set(BW, BH); U.uAspect.value = W / H; U.uPx.value = BH / (2 * TAN); U.uDpr.value = pr;
   U.uField.value.w = TAN * W / H; U.uHalf.value.set(TAN * CAMZ * W / H, TAN * CAMZ);
   U.uU.value = 1 / (2 * TAN * (CAMZ - EDGE_Z)); U.uView.value.set(W, H); U.uFadeH.value = H * .05;
-  U.uLen.value = mobile() ? .62 : .9; U.uScene.value = rtMain.texture; U.uBg.value = rtBg.texture;
+  U.uLen.value = mobile() ? .5 : .9; U.uScene.value = rtMain.texture; U.uBg.value = rtBg.texture;
 }
 
 // ------------------------------------------------------------ frame
 const t0 = performance.now();
 const now = () => FROZEN ? T_FIXED : (performance.now() - t0) / 1000;
-let puffT0 = -1.2, lastAge = 0, lastT = 0, yawPrev = 0, slosh = { x: 0, v: 0, z: 0, vz: 0 }, bubAng = .9;
+let puffT0 = -.7, lastAge = 0, lastT = 0, yawPrev = 0, slosh = { x: 0, v: 0, z: 0, vz: 0 }, bubAng = .9;
 let ftAvg = 16, ftN = 0;
 const v3 = new THREE.Vector3(), q4 = new THREE.Quaternion(), m4 = new THREE.Matrix4();
 const steps = [...document.querySelectorAll('#use ol.steps li')];
@@ -433,13 +436,13 @@ function frame() {
 
   // spray clock
   const pu = byName.use.p, wHero = Wt.hero, wUse = Wt.use, wFoot = Wt.footer;
-  let cyc = ((T - puffT0) % 7.5 + 7.5) % 7.5; let ageT = cyc > 7.1 ? cyc - 7.5 : cyc;
+  let cyc = ((T - puffT0) % 5.6 + 5.6) % 5.6; let ageT = cyc > 5.2 ? cyc - 5.6 : cyc;
   let age = ageT, amt = sstep(.45, .95, wHero) + sstep(.5, 1, wFoot);
   let capUse = 0, settleUse = 0;
   if (wUse > .001) {
     if (m) { amt = Math.max(amt, sstep(.6, 1, wUse)); settleUse = 0; }
     else if (wUse >= wHero) {
-      age = (pu - .30) * 15; amt = sstep(.5, 1, wUse);
+      age = (pu - .30) * 10.5; amt = sstep(.5, 1, wUse);
       capUse = sstep(.03, .24, pu) * 1.25; settleUse = sstep(.48, .92, pu) * .95;
     }
   }
@@ -502,6 +505,9 @@ function frame() {
   nozTip.getWorldPosition(U.uNoz.value);
   v3.copy(nozDirL).setY(.10).normalize().transformDirection(inner.matrixWorld); U.uNozDir.value.copy(v3);
 
+  U.uBeadY.value = P.gy + (m ? .12 : -.2);
+  U.uSprayK.value = Math.sqrt(P.bs) * (m ? 1.25 : 1);
+  U.uLand.value.set(U.uNoz.value.x + U.uNozDir.value.x * 2.3 * U.uSprayK.value, 100 + (1.9 - 100) * sstep(.3, .9, wUse));
   cam.updateMatrixWorld(); U.uVP.value.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
   v3.set(bottle.position.x, bottle.position.y, 0).project(cam);
   U.uBottle.value.set(v3.x * .5 + .5, v3.y * .5 + .5, P.bs * .30, sstep(1.25, .6, Math.abs(P.by)) * (m ? .6 : 1));

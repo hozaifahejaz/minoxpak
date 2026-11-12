@@ -169,13 +169,15 @@ vec3 strandPos(float id,float cell,float s,out vec3 tg,out float len){
   vec4 c=uVP*vec4(root+vec3(0.,len*.7,0.),1.); c.y+=uShift*c.w;
   vec2 d=(c.xy/c.w-uPtr.xy)*vec2(uAspect,1.);
   float f=exp(-dot(d,d)*4.5)*uPtr.z;
-  w.x+=(uPtrVel.x*1.7+sign(d.x)*.42)*f;
+  w.x+=(uPtrVel.x*1.5+sign(d.x)*.26)*f;
   w.y+=(uPtrVel.y*.7-.25)*f;
   float bb=min(dot(w,w),1.6);
   vec3 side=vec3(w.x,0.,w.y);
-  vec3 p=root+vec3(0.,1.,0.)*len*s*(1.-.24*bb*s)+side*len*s*s;
+  vec2 cr=(hash21(id+11.)-.5)*1.5; vec3 curl=vec3(cr.x,0.,cr.y);
+  #define SPOS(ss) (root+vec3(0.,1.,0.)*len*(ss)*(1.-.24*bb*(ss))+side*len*(ss)*(ss)+curl*len*(ss)*(ss)*(1.-(ss)))
+  vec3 p=SPOS(s);
   float s2=s+.03;
-  vec3 p2=root+vec3(0.,1.,0.)*len*s2*(1.-.24*bb*s2)+side*len*s2*s2;
+  vec3 p2=SPOS(s2);
   tg=normalize(p2-p+vec3(0.,1e-5,0.));
   return p;
 }
@@ -224,8 +226,8 @@ void main(){
   float s2=pow(sqrt(max(1.-a2*a2,0.)),16.);    // TRT lobe: coloured, toward the tip
   vec3 base=mix(vec3(.060,.048,.044),vec3(.105,.078,.064),vRnd);
   vec3 col=base*diff*1.25;
-  col+=vec3(1.,.985,.96)*s1*.62;
-  col+=vec3(.52,.34,.22)*s2*.40;
+  col+=vec3(1.,.985,.96)*s1*.60;
+  col+=vec3(.50,.33,.22)*s2*.30;
   vec3 L2=normalize(vec3(.6,.35,-.7));        // back light, for the rim through the tips
   float tt=pow(max(dot(-V,L2)*.5+.5,0.),3.)*sqrt(max(1.-dot(T,L2)*dot(T,L2),0.));
   col+=vec3(.36,.25,.17)*tt*.30*vS;
@@ -335,7 +337,8 @@ void main(){
   vec3 Rr=reflect(-V,nW);
   float F=.055+.945*pow(1.-max(dot(nW,V),0.),5.);
   vec3 e=env(Rr);
-  col+=e*F*mix(1.8,.10,lf.a);
+  float Fg=F*mix(1.,.07,lf.a);
+  col=col*(1.-min(Fg*1.2,1.))+min(e,vec3(6.))*vec3(1.,.94,.84)*Fg*2.2;
   gl_FragColor=vec4(col,1.);
 }
 `;
@@ -405,7 +408,8 @@ attribute vec4 aSeed;  // id, kind, rnd, rnd
 uniform vec2 uRes; uniform float uPx,uDpr;
 uniform vec2 uHalf;
 uniform vec3 uNoz,uNozDir;
-uniform float uSprayAge,uSprayAmt,uSettle,uStrandN,uAmb,uBeads,uFocus,uDof;
+uniform float uSprayAge,uSprayAmt,uSettle,uStrandN,uAmb,uBeads,uFocus,uDof,uSprayK;
+uniform vec2 uLand; uniform float uBeadY;
 varying vec2 vUv; varying float vFade,vKind,vPx,vBlur;
 ${STRAND_LIB}
 void main(){
@@ -413,7 +417,7 @@ void main(){
   vec3 h=hash31(aSeed.x*1.37+aSeed.z*71.);
   float h4=aSeed.w;
   float fade=1.; vec3 P=vec3(0.); vec4 clip;
-  float sizeW=mix(.0055,.034,pow(h4,kind<.5?5.:9.));
+  float sizeW=mix(.0034,.034,pow(h4,kind<.5?5.:8.));
   bool ndcSpace=false; float push=1.;
   if(kind<.5){
     vec3 range=vec3(uHalf.x*2.5,uHalf.y*2.4,6.);
@@ -425,27 +429,27 @@ void main(){
   }else if(kind<1.5||(kind>2.5&&kind<3.5)){
     bool haze=kind>2.5;
     float age=uSprayAge-h.x*(haze?.55:.85);
-    float life=mix(4.2,6.6,h.y);
+    float life=mix(3.6,5.6,h.y);
     vec3 dir=normalize(uNozDir);
     vec3 ax=normalize(cross(dir,vec3(.2,1.,.3))); vec3 ay=cross(dir,ax);
     float an=h.z*6.2832; float sr=sqrt(fract(h4*17.3))*(haze?.26:.36);
     vec3 dd=normalize(dir+(ax*cos(an)+ay*sin(an))*sr);
     float v0=mix(1.9,6.6,fract(h.x*9.7))*(1.-.45*sr);
     float k=1.9;
-    float dist=v0/k*(1.-exp(-k*max(age,0.)));
+    float dist=v0/k*(1.-exp(-k*max(age,0.)))*uSprayK;
     P=uNoz+dd*dist;
     float heavy=pow(h4,3.);
-    P.y-=(.05+.16*heavy)*age+.008*age*age;
+    P.y-=((.07+.16*heavy)*age+.012*age*age)*uSprayK;
     float sw=.045*age;
     P+=vec3(sin(age*.7+h.x*40.+uTime*.35),cos(age*.55+h.y*40.+uTime*.28),sin(age*.6+h.z*40.))*sw;
-    fade=smoothstep(0.,.06,age)*(1.-smoothstep(life*.55,life,age))*step(0.,age)*uSprayAmt;
-    if(haze){sizeW=.07+.62*(1.-exp(-age*.9))*(.6+.8*h4);}
+    fade=smoothstep(0.,.06,age)*(1.-smoothstep(life*.6,life,age))*step(0.,age)*uSprayAmt;
+    if(haze){sizeW=.05+.55*(1.-exp(-age*.9))*(.6+.8*h4);fade*=.55+.9*exp(-age*.8);}
   }else if(kind<2.5){
     float sid=floor(h.x*uStrandN); float s=mix(.30,.97,h.y);
     vec3 tg; float len;
     P=strandPos(sid,-999.,s,tg,len);
-    fade=smoothstep(h.z*.9,h.z*.9+.1,uSettle)*step(.2,len);
-    sizeW=mix(.010,.030,pow(h4,2.2));
+    fade=smoothstep(h.z*.9,h.z*.9+.1,uSettle)*step(.2,len)*exp(-(P.x-uLand.x)*(P.x-uLand.x)/(uLand.y*uLand.y));
+    sizeW=mix(.012,.038,pow(h4,2.2));
     push=0.;
   }else{
     // beads on the lens: they hold, then run
@@ -456,8 +460,8 @@ void main(){
     float yy=mod(y0+1.2,2.4)-1.2;
     float xx=(h.x*2.-1.)*.96+sin(run*2.+h.z*9.)*.012;
     clip=vec4(xx,yy,0.,1.);
-    fade=uBeads*smoothstep(1.2,1.0,abs(yy));
-    sizeW=mix(.035,.105,pow(h4,1.6));
+    fade=uBeads*smoothstep(1.2,1.0,abs(yy))*smoothstep(uBeadY,uBeadY+.25,yy);
+    sizeW=mix(.035,.105,pow(h4,1.6))*min(1.,sqrt(uAspect));
     push=.25;
   }
   if(!ndcSpace){
@@ -491,23 +495,26 @@ void main(){
   vec2 suv=gl_FragCoord.xy/uRes;
   if(vKind>2.5&&vKind<3.5){
     float g=exp(-r2*3.2)*(1.-r2);
-    gl_FragColor=vec4(vec3(.985,.995,.99),g*vFade*.15);
+    gl_FragColor=vec4(vec3(.985,.995,.99),g*vFade*.17);
     return;
   }
   float z=sqrt(1.-r2);
+  vec2 l=normalize(vec2(-.52,.70));
   // a drop is a small strong lens: it shows the scene inverted and enlarged
-  vec2 off=-vUv*(.42+.95*r2)*vPx/uRes*1.55;
+  vec2 off=-vUv*(.42+.95*r2)*vPx/uRes*2.3;
   vec3 refr=texture2D(uScene,suv+off).rgb;
   vec3 base=texture2D(uScene,suv).rgb;
-  float fres=pow(1.-z,2.4);
-  vec3 col=refr*(1.-.55*fres);
-  col+=fres*vec3(.22,.24,.24);
-  vec2 l=normalize(vec2(-.52,.70));
-  float cres=smoothstep(.15,.95,dot(vUv,-l))*smoothstep(1.,.72,r)*smoothstep(.35,.8,r);
-  col+=cres*.16;
-  float sp=smoothstep(.22,.0,length(vUv-l*.50));
-  col+=sp*sp*1.25;
-  float sp2=smoothstep(.10,.0,length(vUv+l*.62)); col+=sp2*.35;
+  float lit=dot(vUv,-l);
+  float rimD=smoothstep(.62,1.,r);
+  vec3 col=refr*(1.-.08*r2);
+  col*=1.-rimD*mix(.60,.04,smoothstep(-.7,.6,lit))*mix(.30,1.,smoothstep(3.,11.,vPx));       // the dark crescent sits on the lit side
+  col+=smoothstep(.25,.95,lit)*smoothstep(1.,.72,r)*smoothstep(.30,.75,r)*.22;  // and the light gathers opposite
+  float sp=smoothstep(.21,.0,length(vUv-l*.50));
+  col+=sp*sp*1.35;
+  col+=pow(1.-z,4.)*.10;
+  if(vKind>1.5&&vKind<2.5){col=mix(col,vec3(.80,.85,.85),.38)+sp*sp*1.2+smoothstep(.5,.0,length(vUv-l*.35))*.18;}
+  float small=smoothstep(5.,2.,vPx);
+  col=mix(col,vec3(1.04),small*.55*(1.-r));
   float edge=1.-smoothstep(1.-max(.10,2.2/vPx),1.,r);
   vec3 bok=base+vec3(.06)*(.75+.25*smoothstep(.6,.95,r));
   col=mix(col,bok,vBlur);
