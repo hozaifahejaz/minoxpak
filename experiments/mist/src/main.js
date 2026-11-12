@@ -39,7 +39,7 @@ const U = {
   uHalf: { value: new THREE.Vector2() },
   uNoz: { value: new THREE.Vector3() }, uNozDir: { value: new THREE.Vector3(-1, 0, 0) },
   uSprayAge: { value: 0 }, uSprayAmt: { value: 1 }, uSettle: { value: 0 }, uStrandN: { value: 1 },
-  uAmb: { value: 1 }, uBeads: { value: 1 }, uFocus: { value: CAMZ }, uDof: { value: 1.1 }, uLen: { value: 1 }, uSprayK: { value: 1 }, uLand: { value: new THREE.Vector2(0, 100) }, uBeadY: { value: -1 },
+  uAmb: { value: 1 }, uBeads: { value: 1 }, uFocus: { value: CAMZ }, uDof: { value: 1.1 }, uLen: { value: 1 }, uSprayK: { value: 1 }, uLand: { value: new THREE.Vector2(0, 100) }, uBeadY: { value: -1 }, uFS: { value: 1 },
   uScene: { value: null }, uBg: { value: null },
   uLedge: { value: 0 }, uFadeH: { value: 40 }, uView: { value: new THREE.Vector2(W, H) },
 };
@@ -52,7 +52,7 @@ const quadGeo = new THREE.PlaneGeometry(2, 2);
 
 const bg = new THREE.Mesh(quadGeo, new THREE.ShaderMaterial({
   vertexShader: S.QUAD_VS, fragmentShader: S.BG_FS, depthTest: false, depthWrite: false,
-  uniforms: pick('uTime', 'uAspect', 'uGY', 'uU', 'uReveal', 'uGrow', 'uSeep', 'uBottle'),
+  uniforms: pick('uTime', 'uAspect', 'uGY', 'uU', 'uReveal', 'uGrow', 'uSeep', 'uBottle', 'uFS'),
 }));
 bg.frustumCulled = false; bg.renderOrder = -10; bg.layers.enable(1);
 world.add(bg);
@@ -201,6 +201,10 @@ function makeType() {
 function rasterType() {
   const k = Math.min(devicePixelRatio || 1, 2);
   for (const it of typeItems) {
+    // on a phone only the hero word is drawn in GL; the rest stays in the page, so it wraps and never drifts under the finger
+    it.on = it.hero || !mobile();
+    it.el.classList.toggle('gl-live', it.on);
+    if (!it.on) { it.mesh.visible = false; continue; }
     const cs = getComputedStyle(it.el), r = it.el.getBoundingClientRect(), fs = parseFloat(cs.fontSize);
     const pad = Math.ceil(fs * .32); it.pad = pad; it.w = r.width; it.h = r.height;
     it.cv.width = Math.ceil((r.width + pad * 2) * k); it.cv.height = Math.ceil((r.height + pad * 2) * k);
@@ -223,9 +227,8 @@ function rasterType() {
     };
     walk(it.el, cs);
     it.tex.needsUpdate = true;
-    it.mat.uniforms.uMask.value = (mobile() && !it.hero) ? 1 : 0;
+    it.mat.uniforms.uMask.value = 0;
   }
-  root.classList.add('gl-on');
 }
 
 // ------------------------------------------------------------ droplets
@@ -267,13 +270,13 @@ const POSE_D = {
 };
 const POSE_M = {
   hero:      { bx: .30, by: .17, bs: .60, yaw: -.42, roll: -.05, cap: 1, gy: -.24, gh: -.75, grow: 1, settle: .6, reveal: 0, beads: 1, amb: 1 },
-  what:      { bx: .0, by: .57, bs: .42, yaw: .28, roll: .03, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .4, reveal: 0, beads: 0, amb: .8 },
-  use:       { bx: .40, by: .60, bs: .38, yaw: TAU - .50, roll: .5, cap: 1.1, gy: .17, gh: -.5, grow: 1, settle: .8, reveal: 0, beads: 0, amb: .6 },
-  expect:    { bx: .52, by: .80, bs: .23, yaw: TAU + .5, roll: 1.0, cap: 1.2, gy: .60, gh: -.14, grow: .1, settle: .5, reveal: 1, beads: 0, amb: .4 },
-  safety:    { bx: -.05, by: .57, bs: .42, yaw: 2 * TAU - .22, roll: -.03, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .7 },
-  buy:       { bx: .1, by: .57, bs: .42, yaw: 2 * TAU + .42, roll: .05, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
-  questions: { bx: -.1, by: .57, bs: .40, yaw: 2 * TAU + 2.5, roll: -.06, cap: 0, gy: .17, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
-  footer:    { bx: .28, by: .50, bs: .46, yaw: 3 * TAU - .42, roll: -.03, cap: 1, gy: .12, gh: -.7, grow: 1, settle: .9, reveal: 0, beads: 0, amb: 1 },
+  what:      { bx: .0, by: .57, bs: .42, yaw: .28, roll: .03, cap: 0, gy: .18, gh: -.5, grow: 1, settle: .4, reveal: 0, beads: 0, amb: .8 },
+  use:       { bx: .40, by: .60, bs: .38, yaw: TAU - .50, roll: .5, cap: 1.1, gy: .18, gh: -.5, grow: 1, settle: .8, reveal: 0, beads: 0, amb: .6 },
+  expect:    { bx: .55, by: .80, bs: .22, yaw: TAU + .5, roll: 1.0, cap: 1.2, gy: .64, gh: -.14, grow: .1, settle: .5, reveal: 1, beads: 0, amb: .4 },
+  safety:    { bx: -.05, by: .57, bs: .42, yaw: 2 * TAU - .22, roll: -.03, cap: 0, gy: .18, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .7 },
+  buy:       { bx: .1, by: .57, bs: .42, yaw: 2 * TAU + .42, roll: .05, cap: 0, gy: .18, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
+  questions: { bx: -.1, by: .57, bs: .40, yaw: 2 * TAU + 2.5, roll: -.06, cap: 0, gy: .18, gh: -.5, grow: 1, settle: .2, reveal: 0, beads: 0, amb: .8 },
+  footer:    { bx: .28, by: .56, bs: .42, yaw: 3 * TAU - .42, roll: -.03, cap: 1, gy: .18, gh: -.7, grow: 1, settle: .9, reveal: 0, beads: 0, amb: 1 },
 };
 const KEYS = Object.keys(POSE_D.hero);
 const secs = [...document.querySelectorAll('[data-pose]')].map(el => ({ el, name: el.dataset.pose, a: 0, b: 0 }));
@@ -291,7 +294,7 @@ function layout() {
     if (!m && s.el.classList.contains('tall')) { s.a = top; s.b = top + r.height - H; return; }
     const c = s.el.querySelector('.col') || s.el.firstElementChild;
     const cr = c.getBoundingClientRect(); const ct = cr.top - sr.top + st;
-    if (m) { s.a = ct - H * .47; s.b = Math.max(s.a + 1, ct + cr.height - H * .80); }
+    if (m) { s.a = ct - H * .50; s.b = Math.max(s.a + 1, ct + cr.height - H * .80); }
     else { const mid = ct + cr.height / 2 - H / 2; s.a = mid - H * .10; s.b = mid + H * .10; if (s.name === 'footer') { s.a = Math.min(s.a, maxScroll - H * .2); s.b = maxScroll + 1; } }
     s.a = Math.min(s.a, maxScroll - 2);
   });
@@ -382,7 +385,7 @@ function hiss() {
 function resize() {
   W = innerWidth; H = innerHeight;
   const base = Math.min(devicePixelRatio || 1, 2);
-  const budget = lite ? 1.7e6 : 3.2e6;                    // internal pixels
+  const budget = lite ? 1.15e6 : 3.2e6;                    // internal pixels
   let pr = Math.min(base, Math.sqrt(budget / (W * H)));
   pr = Math.max(.6, pr * quality);
   dpr = pr;
@@ -397,7 +400,7 @@ function resize() {
   U.uRes.value.set(BW, BH); U.uAspect.value = W / H; U.uPx.value = BH / (2 * TAN); U.uDpr.value = pr;
   U.uField.value.w = TAN * W / H; U.uHalf.value.set(TAN * CAMZ * W / H, TAN * CAMZ);
   U.uU.value = 1 / (2 * TAN * (CAMZ - EDGE_Z)); U.uView.value.set(W, H); U.uFadeH.value = H * .05;
-  U.uLen.value = mobile() ? .5 : .9; U.uScene.value = rtMain.texture; U.uBg.value = rtBg.texture;
+  U.uLen.value = mobile() ? .5 : .9; U.uFS.value = mobile() ? .62 : 1; U.uScene.value = rtMain.texture; U.uBg.value = rtBg.texture;
 }
 
 // ------------------------------------------------------------ frame
@@ -410,6 +413,7 @@ const steps = [...document.querySelectorAll('#use ol.steps li')];
 const tls = [...document.querySelectorAll('#expect .tl .t')], tlEl = document.querySelector('#expect .tl');
 const caps = [...document.querySelectorAll('#expect .cap')];
 const pinE = document.querySelector('#expect .pin');
+const heroUnder = document.querySelector('#hero .under'); let heroO = 1;
 
 function frame() {
   const T = now(); const dt = Math.min(.05, Math.max(.001, T - lastT)) || .016; lastT = T;
@@ -466,7 +470,7 @@ function frame() {
   U.uField.value.z = P.gh; U.uShift.value = P.gy - nearNdc; U.uGY.value = P.gy * .5 + .5;
   const ledgePx = (1 - U.uGY.value) * H + P.reveal * 1.5 * U.uU.value * H;
   U.uLedge.value = ledgePx;
-  if (m) root.style.setProperty('--ledge', ledgePx.toFixed(1) + 'px');
+  if (m) { const o = 1 - sstep(0, H * .22, y); if (Math.abs(o - heroO) > .01) { heroO = o; heroUnder.style.opacity = o.toFixed(2); } }
 
   // bottle
   const hw = U.uHalf.value.x, hh = U.uHalf.value.y;
@@ -515,6 +519,7 @@ function frame() {
 
   // type follows the DOM
   for (const it of typeItems) {
+    if (!it.on) { it.mesh.visible = false; continue; }
     const r = it.el.getBoundingClientRect();
     const vis = r.bottom > -it.pad && r.top < H + it.pad && it.w > 0;
     it.mesh.visible = vis;
