@@ -3,12 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Minoxpak Store</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Minoxpak minoxidil spray for hair loss and hair regrowth, for men and women. Delivered across Pakistan.">
+<title>Minoxidil Spray in Pakistan, 5% and 2% | Minoxpak</title>
+<meta name="description" content="Minoxpak minoxidil spray for hair loss and regrowth. 5% for men, 2% for women. Cash on delivery across Pakistan in 2 to 4 days.">
+<link rel="canonical" href="https://minoxpak.onrender.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0E4F5C">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Minoxpak">
+<meta property="og:title" content="Minoxpak: minoxidil spray for hair regrowth">
+<meta property="og:description" content="5% for men, 2% for women. Cash on delivery across Pakistan in 2 to 4 days.">
+<meta property="og:url" content="https://minoxpak.onrender.com/">
+<meta property="og:image" content="https://minoxpak.onrender.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_PK">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: modern health-tech storefront. Cool off-white canvas, deep teal brand, coral accent,
    soft mesh gradients (mint, lilac, peach), bento grids, glass chips, filterable plans, hair quiz. */
@@ -22,7 +34,8 @@
   --brand-2:#17808A;
   --brand-ink:#FFFFFF;
   --accent:#FF6B57;     /* coral */
-  --accent-ink:#FFFFFF;
+  --accent-ink:#2A0A04;  /* dark text on coral: 6.7:1 */
+  --accent-text:#BD3420; /* coral used as text on light surfaces */
   --mint:#CFF3E6;
   --lilac:#E6E2FF;
   --peach:#FFE4DA;
@@ -36,12 +49,12 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#081417; --surface:#0F2125; --ink:#E8F1F2; --muted:#9AB0B4; --line:#1D3338;
-  --brand:#3FC1C4; --brand-2:#6AD8D2; --brand-ink:#04161A; --accent:#FF7C69; --accent-ink:#1A0602;
+  --brand:#3FC1C4; --brand-2:#6AD8D2; --brand-ink:#04161A; --accent:#FF7C69; --accent-ink:#1A0602; --accent-text:#FF9C8C;
   --mint:#123A33; --lilac:#25224A; --peach:#3A221C; --sky:#14283D; --glass:rgba(15,33,37,.72);
   --shadow:0 24px 48px -28px rgba(0,0,0,.7); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#081417; --surface:#0F2125; --ink:#E8F1F2; --muted:#9AB0B4; --line:#1D3338;
-  --brand:#3FC1C4; --brand-2:#6AD8D2; --brand-ink:#04161A; --accent:#FF7C69; --accent-ink:#1A0602;
+  --brand:#3FC1C4; --brand-2:#6AD8D2; --brand-ink:#04161A; --accent:#FF7C69; --accent-ink:#1A0602; --accent-text:#FF9C8C;
   --mint:#123A33; --lilac:#25224A; --peach:#3A221C; --sky:#14283D; --glass:rgba(15,33,37,.72);
   --shadow:0 24px 48px -28px rgba(0,0,0,.7); color-scheme:dark}
 
@@ -65,6 +78,8 @@ section{padding-block:clamp(56px,8vw,104px)}
 .head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:40px}
 .head > div:not(.tabs){display:grid;gap:14px;min-width:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+section[id],.tile[id],main[id]{scroll-margin-top:104px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:600 1rem/1 var(--f);padding:17px 28px;border-radius:999px;border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s, box-shadow .2s, background .2s}
 .btn:hover{transform:translateY(-2px)}
@@ -72,7 +87,7 @@ section{padding-block:clamp(56px,8vw,104px)}
 .btn-accent{background:var(--accent);color:var(--accent-ink);box-shadow:0 14px 28px -14px var(--accent)}
 .btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
 .btn-white{background:#fff;color:#0B1F24}
-.btn-sm{padding:11px 18px;font-size:.92rem}
+.btn-sm{padding:11px 18px;font-size:.92rem;min-height:44px}
 .btn-block{width:100%}
 .btn .arr{transition:transform .2s}
 .btn:hover .arr{transform:translateX(3px)}
@@ -96,7 +111,7 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:6px}
 .ib{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:none;border:0;color:var(--ink);cursor:pointer}
 .ib:hover{background:var(--surface)}
-.count{position:absolute;top:3px;right:1px;background:var(--accent);color:#fff;border-radius:999px;min-width:18px;height:18px;font-size:.68rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.count{position:absolute;top:3px;right:1px;background:var(--accent);color:var(--accent-ink);border-radius:999px;min-width:18px;height:18px;font-size:.68rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
 .menu-btn{display:none}
 @media (max-width:960px){.nav-links{display:none}.menu-btn{display:grid}}
 @media (max-width:440px){.nav-right .btn{display:none}}
@@ -115,7 +130,7 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,56px);align-items:center}
 .hero-copy{display:grid;gap:24px;min-width:0}
 .badge{justify-self:start;display:inline-flex;align-items:center;gap:10px;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;font-size:.88rem;font-weight:600}
-.badge b{background:var(--accent);color:#fff;border-radius:999px;padding:3px 10px;font-size:.78rem}
+.badge b{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:3px 10px;font-size:.78rem}
 .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
 .checks{display:flex;gap:10px 22px;flex-wrap:wrap;color:var(--muted);font-size:.92rem;font-weight:500}
 .checks span{display:inline-flex;gap:8px;align-items:center}
@@ -151,7 +166,7 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 .tile .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;z-index:-2;transition:transform .6s ease}
 .tile:hover .ph{transform:scale(1.04)}
 .tile::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,20,24,.6) 0%,rgba(6,20,24,.05) 45%,rgba(6,20,24,.55) 100%)}
-.tile h3{font-size:clamp(1.9rem,3.4vw,2.8rem);letter-spacing:-.04em;line-height:1}
+.tile h2{font-size:clamp(1.9rem,3.4vw,2.8rem);letter-spacing:-.04em;line-height:1}
 .tile p{max-width:30ch;color:rgba(255,255,255,.88);margin-top:10px}
 .tile .row{display:flex;justify-content:space-between;align-items:end;gap:12px}
 .tile .pill{background:#fff;color:#0B1F24;font-weight:600;padding:13px 20px;border-radius:999px;font-size:.92rem}
@@ -176,8 +191,8 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 
 /* treatments */
 .tabs{display:inline-flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;flex-wrap:wrap}
-.tab{border:0;background:none;color:var(--muted);font:600 .92rem var(--f);padding:10px 18px;border-radius:999px;cursor:pointer}
-.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.tab{border:0;background:none;color:var(--muted);font:600 .92rem var(--f);padding:10px 18px;min-height:44px;border-radius:999px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media (max-width:980px){.cards{grid-template-columns:1fr 1fr}}
 @media (max-width:620px){.cards{grid-template-columns:1fr}}
@@ -187,7 +202,7 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 .card .img svg{transition:transform .35s ease}
 .card:hover .img svg{transform:scale(1.05) rotate(-2deg)}
 .chip{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.9);color:#0B1F24;font-size:.75rem;font-weight:700;padding:6px 12px;border-radius:999px}
-.chip.sale{left:auto;right:14px;background:var(--accent);color:#fff}
+.chip.sale{left:auto;right:14px;background:var(--accent);color:var(--accent-ink)}
 .card .body{padding:14px 22px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
 .card .body p{color:var(--muted);font-size:.95rem}
 .price{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-variant-numeric:tabular-nums;margin-top:auto;padding-top:8px}
@@ -204,7 +219,7 @@ header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
 @media (max-width:860px){.steps{grid-template-columns:1fr}}
 .step{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px;display:grid;gap:12px;align-content:start;position:relative}
-.step .n{font-family:var(--f-display);font-size:.85rem;font-weight:700;color:var(--accent)}
+.step .n{font-family:var(--f-display);font-size:.85rem;font-weight:700;color:var(--accent-text)}
 .step p{color:var(--muted)}
 .step .ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-2));margin-bottom:6px}
 .step:nth-child(2) .ic{background:linear-gradient(135deg,#7A6CFF,#B4A9FF)}
@@ -231,7 +246,7 @@ table.cmp{width:100%;min-width:600px;border-collapse:collapse;font-size:.96rem}
 .cmp thead th{font-family:var(--f-display);font-size:1rem}
 .cmp .us{background:color-mix(in srgb,var(--mint) 55%,transparent)}
 .cmp thead .us{color:var(--brand)}
-.yes{color:var(--brand-2);font-weight:700}
+.yes{color:var(--brand);font-weight:700}
 .no{color:var(--muted)}
 
 /* reviews */
@@ -246,6 +261,20 @@ table.cmp{width:100%;min-width:600px;border-collapse:collapse;font-size:.96rem}
 .stars{color:#F5A524;letter-spacing:2px}
 .sample{font-size:.82rem;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:6px 14px}
 
+/* evidence (uses .reviews grid) */
+.review h3{font-size:1.15rem}
+.review p{color:var(--muted);font-size:.95rem}
+.review .fig{font-family:var(--f-display);font-weight:800;font-size:2.6rem;letter-spacing:-.04em;line-height:1;color:var(--brand)}
+.review a{color:var(--brand);font-weight:600;font-size:.9rem;display:inline-block;padding:10px 0}
+
+/* how to use */
+.use{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+@media (max-width:860px){.use{grid-template-columns:1fr}}
+.use > div{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px;display:grid;gap:14px;align-content:start}
+.use ol,.use ul{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)}
+.use .warn{background:var(--peach);border:0}
+.use .warn ul{color:var(--ink)}
+
 /* faq */
 .faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
 @media (max-width:900px){.faq-grid{grid-template-columns:1fr;gap:24px}}
@@ -254,7 +283,7 @@ table.cmp{width:100%;min-width:600px;border-collapse:collapse;font-size:.96rem}
 .faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font-weight:600;font-size:1.05rem}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";flex:none;width:30px;height:30px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:1.2rem;transition:transform .2s, background .2s}
-.faq details[open] summary::after{transform:rotate(45deg);background:var(--accent);color:#fff}
+.faq details[open] summary::after{transform:rotate(45deg);background:var(--accent);color:var(--accent-ink)}
 .faq details p{color:var(--muted);padding-bottom:20px;max-width:64ch}
 
 /* final */
@@ -268,16 +297,22 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 @media (max-width:860px){.foot{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.foot{grid-template-columns:1fr}}
 .foot > div{min-width:0}
-.foot h4{margin:0 0 14px;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.foot h3{margin:0 0 10px;font:700 .8rem/1.4 var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:0}
 .foot a{text-decoration:none;font-weight:500}
+.foot li a{display:inline-block;padding:9px 0}
 .foot a:hover{color:var(--brand-2)}
-.newsletter{display:flex;gap:6px;margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px}
-.newsletter input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);padding:10px 14px;font:inherit}
 .pay{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .pay span{border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:.78rem;font-weight:700;color:var(--muted)}
 .legal{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);display:grid;gap:10px;color:var(--muted);font-size:.84rem}
-.legal a{text-decoration:underline}
+.legal a{text-decoration:underline;display:inline-block;padding:4px 0}
+
+/* lighter effects on small screens: budget phones struggle with blur and animated gradients */
+@media (max-width:700px){
+  .mesh{filter:blur(40px)}.mesh i{animation:none}
+  .nav,.badge{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--surface)}
+  .chipf{-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in srgb,var(--surface) 92%,transparent)}
+}
 
 /* mobile sticky cta + whatsapp */
 .mcta{display:none}
@@ -292,10 +327,10 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 /* overlays */
 .scrim{position:fixed;inset:0;background:rgba(5,15,18,.5);backdrop-filter:blur(2px);z-index:70;opacity:0;pointer-events:none;transition:opacity .2s}
 .scrim.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(440px,100%);background:var(--bg);display:flex;flex-direction:column;overflow-y:auto;transform:translateX(105%);transition:transform .28s ease;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
-.drawer.open{transform:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(440px,100%);background:var(--bg);display:flex;flex-direction:column;overflow-y:auto;transform:translateX(105%);visibility:hidden;transition:transform .28s ease,visibility 0s .28s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer.open{transform:none;visibility:visible;transition:transform .28s ease}
 .d-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px}
-.d-head h3{font-size:1.5rem}
+.d-head h2{font-size:1.5rem}
 .d-body{flex:1 0 auto;padding:4px 24px 18px;display:grid;gap:12px;align-content:start}
 .li{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:10px}
 .li .th{width:72px;height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -303,9 +338,9 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 .li .meta b{display:block;line-height:1.25}
 .li .meta small{color:var(--muted)}
 .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;margin-top:6px}
-.qty button{width:30px;height:30px;border:0;background:none;color:var(--ink);cursor:pointer}
+.qty button{width:40px;height:40px;border:0;background:none;color:var(--ink);cursor:pointer}
 .qty span{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
-.rm{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.82rem;cursor:pointer;margin-left:10px}
+.rm{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.82rem;cursor:pointer;margin-left:6px;padding:12px 6px}
 .li .lp{font-weight:700;font-variant-numeric:tabular-nums;padding-right:6px}
 .empty{color:var(--muted);text-align:center;padding:40px 0}
 .d-foot{padding:18px 24px;display:grid;gap:10px;border-top:1px solid var(--line)}
@@ -317,11 +352,15 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 .co{display:grid;gap:10px;margin-top:6px}
 .co label{display:grid;gap:4px;font-size:.85rem;font-weight:600;color:var(--muted)}
 .co input,.co select,.co textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
-.ok{background:var(--mint);border-radius:18px;padding:16px}
+.ok{background:var(--mint);border-radius:18px;padding:16px;display:grid;gap:8px}
+.ok ul{margin:0;padding-left:18px}
+.upsell{display:grid;gap:8px;background:var(--peach);border-radius:16px;padding:12px 14px;font-size:.92rem}
+.err{color:var(--accent-text);font-size:.82rem;font-weight:600}
 
 /* quiz */
-.quiz{position:fixed;inset:0;z-index:85;background:var(--bg);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(16px);transition:.25s ease;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-y:auto}
-.quiz.open{opacity:1;pointer-events:auto;transform:none}
+.quiz{position:fixed;inset:0;z-index:85;background:var(--bg);display:flex;flex-direction:column;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(16px);transition:opacity .25s ease,transform .25s ease,visibility 0s .25s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-y:auto}
+.quiz.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .25s ease,transform .25s ease}
+.quiz > .wrap{width:100%}
 .q-top{display:flex;align-items:center;gap:16px;height:72px}
 .q-prog{flex:1;min-width:60px;height:6px;background:var(--line);border-radius:999px;overflow:hidden}
 .q-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--brand-2),var(--accent));transition:width .3s}
@@ -342,6 +381,27 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 .toast{position:fixed;left:50%;top:calc(96px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.92rem;opacity:0;transition:.25s;z-index:95;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://minoxpak.onrender.com/#org","name":"Minoxpak","url":"https://minoxpak.onrender.com/","logo":"https://minoxpak.onrender.com/favicon.svg","contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":"+923103699935","areaServed":"PK","availableLanguage":["en","ur"]}},
+{"@type":"WebSite","name":"Minoxpak","url":"https://minoxpak.onrender.com/","publisher":{"@id":"https://minoxpak.onrender.com/#org"}},
+{"@type":"ItemList","name":"Minoxpak plans","itemListElement":[
+{"@type":"ListItem","position":1,"item":{"@type":"Product","name":"Minoxpak 5% for Men","description":"5% minoxidil spray for men, 60 mL, one month supply.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"2499","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}},
+{"@type":"ListItem","position":2,"item":{"@type":"Product","name":"Men 3 Month Pack","description":"Three 60 mL bottles of 5% minoxidil spray for men.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"6399","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}},
+{"@type":"ListItem","position":3,"item":{"@type":"Product","name":"Men 6 Month Pack","description":"Six 60 mL bottles of 5% minoxidil spray for men.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"12499","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}},
+{"@type":"ListItem","position":4,"item":{"@type":"Product","name":"Minoxpak 2% for Women","description":"2% minoxidil spray for women, 60 mL, one month supply.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"2199","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}},
+{"@type":"ListItem","position":5,"item":{"@type":"Product","name":"Women 3 Month Pack","description":"Three 60 mL bottles of 2% minoxidil spray for women.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"5599","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}},
+{"@type":"ListItem","position":6,"item":{"@type":"Product","name":"Regrowth Kit","description":"5% minoxidil spray with a 0.5 mm derma roller.","brand":{"@type":"Brand","name":"Minoxpak"},"image":"https://minoxpak.onrender.com/og-image.jpg","offers":{"@type":"Offer","price":"3999","priceCurrency":"PKR","availability":"https://schema.org/InStock","url":"https://minoxpak.onrender.com/#shop"}}}
+]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How long until I see results?","acceptedAnswer":{"@type":"Answer","text":"Most people notice less hair fall in 6 to 8 weeks and visible new growth at 3 to 4 months. Best results show at 6 months or later with twice-daily use."}},
+{"@type":"Question","name":"Is shedding in the first weeks normal?","acceptedAnswer":{"@type":"Answer","text":"Yes. Minoxidil pushes out old resting hairs so stronger new ones can grow. It usually settles within 2 months."}},
+{"@type":"Question","name":"Should I choose 5% or 2%?","acceptedAnswer":{"@type":"Answer","text":"5% is the standard strength for men. 2% is commonly recommended for women."}},
+{"@type":"Question","name":"What happens if I stop?","acceptedAnswer":{"@type":"Answer","text":"Minoxidil works while you use it. If you stop, hair it helped regrow gradually sheds over the following months."}},
+{"@type":"Question","name":"How do delivery and payment work?","acceptedAnswer":{"@type":"Answer","text":"We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives. Delivery is free over Rs. 3,000 and Rs. 250 below that."}}
+]}
+]}
+</script>
 </head>
 <body>
 
@@ -386,12 +446,12 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
   </defs>
 </svg>
 
-<div class="announce" aria-label="Offers">
+<aside class="announce" aria-label="Offers">
   <div class="ticker">
-    <span>Free delivery over Rs. 3,000</span><span>Cash on delivery nationwide</span><span>Save up to 30% on 3 and 6 month plans</span><span>Discreet packaging</span><span>WhatsApp support</span>
-    <span aria-hidden="true">Free delivery over Rs. 3,000</span><span aria-hidden="true">Cash on delivery nationwide</span><span aria-hidden="true">Save up to 30% on 3 and 6 month plans</span><span aria-hidden="true">Discreet packaging</span><span aria-hidden="true">WhatsApp support</span>
+    <span>Free delivery over Rs. 3,000</span><span>Cash on delivery nationwide</span><span>Save up to 17% on 3 and 6 month packs</span><span>Discreet packaging</span><span>WhatsApp support</span>
+    <span aria-hidden="true">Free delivery over Rs. 3,000</span><span aria-hidden="true">Cash on delivery nationwide</span><span aria-hidden="true">Save up to 17% on 3 and 6 month packs</span><span aria-hidden="true">Discreet packaging</span><span aria-hidden="true">WhatsApp support</span>
   </div>
-</div>
+</aside>
 
 <header class="site">
   <div class="wrap">
@@ -433,10 +493,10 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
           </div>
         </div>
         <div class="hero-art">
-          <div id="hero-3d" data-model="pebble" data-ui="right" data-zoom=".78" data-backdrop="#8FD3C8" role="img" aria-label="Minoxpak 5% minoxidil spray bottle"><svg viewBox="0 0 120 260" aria-hidden="true"><use href="#bottle"/></svg></div>
+          <div id="hero-3d" data-model="pebble" data-ui="right" data-zoom=".78" data-backdrop="#8FD3C8"><svg viewBox="0 0 120 260" role="img" aria-label="Minoxpak 5% minoxidil spray bottle"><use href="#bottle"/></svg></div>
           <div class="chipf a"><b>3–4 months</b>to visible regrowth</div>
           <div class="chipf c"><b>6 sprays</b>= one 1 mL dose</div>
-          <div class="chipf b"><b>Rs. 2,083/mo</b>on the 6 month plan</div>
+          <div class="chipf b"><b>Rs. 2,083 a month</b>with the 6 month pack</div>
         </div>
       </div>
       <div class="stats">
@@ -452,15 +512,31 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
   <section style="padding-top:0">
     <div class="wrap split2">
       <a class="tile men" href="#shop" id="men" data-filter-link="men">
-        <img class="ph" src="https://images.pexels.com/photos/4746754/pexels-photo-4746754.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" loading="lazy" onerror="this.remove()">
-        <div><span class="eyebrow" style="color:#CFF3E6">For men</span><h3 style="margin-top:12px">Receding hairline or thinning crown?</h3><p>Full-strength 5% minoxidil spray for male pattern hair loss.</p></div>
+        <img class="ph" src="https://images.pexels.com/photos/4746754/pexels-photo-4746754.jpeg?auto=compress&cs=tinysrgb&w=1200" srcset="https://images.pexels.com/photos/4746754/pexels-photo-4746754.jpeg?auto=compress&cs=tinysrgb&w=640 640w, https://images.pexels.com/photos/4746754/pexels-photo-4746754.jpeg?auto=compress&cs=tinysrgb&w=1200 1200w" sizes="(max-width:760px) 100vw, 50vw" decoding="async" alt="" loading="lazy" onerror="this.remove()">
+        <div><span class="eyebrow" style="color:#CFF3E6">For men</span><h2 style="margin-top:12px">Receding hairline or thinning crown?</h2><p>Full-strength 5% minoxidil spray for male pattern hair loss.</p></div>
         <div class="row"><span class="pill">Shop for men →</span><span class="str">5%</span></div>
       </a>
       <a class="tile women" href="#shop" id="women" data-filter-link="women">
-        <img class="ph" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" onerror="this.remove()">
-        <div><span class="eyebrow" style="color:#FFE4DA">For women</span><h3 style="margin-top:12px">Widening part or less volume?</h3><p>Gentle 2% minoxidil spray for female pattern thinning.</p></div>
+        <img class="ph" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80" srcset="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=640&q=75 640w, https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80 1200w" sizes="(max-width:760px) 100vw, 50vw" decoding="async" alt="" loading="lazy" onerror="this.remove()">
+        <div><span class="eyebrow" style="color:#FFE4DA">For women</span><h2 style="margin-top:12px">Widening part or less volume?</h2><p>Gentle 2% minoxidil spray for female pattern thinning.</p></div>
         <div class="row"><span class="pill">Shop for women →</span><span class="str">2%</span></div>
       </a>
+    </div>
+  </section>
+
+  <!-- PLANS -->
+  <section id="shop" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="eyebrow">Plans</span><h2>Choose your plan</h2><p class="lede">Every pack is a single payment, not a subscription. Pay cash when it arrives.</p></div>
+        <div class="tabs" role="group" aria-label="Filter plans">
+          <button class="tab" type="button" aria-pressed="true" data-f="all">All</button>
+          <button class="tab" type="button" aria-pressed="false" data-f="men">Men</button>
+          <button class="tab" type="button" aria-pressed="false" data-f="women">Women</button>
+          <button class="tab" type="button" aria-pressed="false" data-f="kit">Kits</button>
+        </div>
+      </div>
+      <div class="cards" id="cards" aria-live="polite"></div>
     </div>
   </section>
 
@@ -478,26 +554,10 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
         <div class="bx mint"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v5M5 5l3 3M19 5l-3 3"/><rect x="8" y="10" width="8" height="12" rx="2"/></svg></span><h3>Fine-mist spray</h3><p>Even coverage, no drips.</p></div>
         <div class="bx lilac"><span class="num">2×</span><h3>A day, 1 mL each</h3><p>Morning and night.</p></div>
         <div class="bx peach"><span class="ic" style="background:#fff;color:var(--accent)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg></span><h3>Dries in minutes</h3><p>Not greasy, even in summer heat.</p></div>
-        <div class="bx"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg></span><h3>Pay your way</h3><p>Cash on delivery, cards, JazzCash, Easypaisa.</p></div>
-        <div class="bx wide" style="flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap"><div style="flex:1;min-width:200px;display:grid;gap:8px"><h3>Priced for the long run</h3><p>Regrowth takes months, so our plans bring the monthly cost down by up to 30%.</p></div><a href="#shop" class="btn btn-brand btn-sm">See plans <span class="arr">→</span></a></div>
-        <div class="bx wide" style="flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap"><div style="flex:1;min-width:200px;display:grid;gap:8px"><h3>Real people on WhatsApp</h3><p>Questions about using it, shedding or your order? Message us and get a human reply.</p></div><a href="https://wa.me/920000000000" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Chat with us</a></div>
+        <div class="bx"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg></span><h3>Pay on delivery</h3><p>Cash on delivery across Pakistan. No advance payment.</p></div>
+        <div class="bx wide" style="flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap"><div style="flex:1;min-width:200px;display:grid;gap:8px"><h3>Priced for the long run</h3><p>Regrowth takes months, so our 3 and 6 month packs bring the monthly cost down by up to 17%.</p></div><a href="#shop" class="btn btn-brand btn-sm">See plans <span class="arr">→</span></a></div>
+        <div class="bx wide" style="flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap"><div style="flex:1;min-width:200px;display:grid;gap:8px"><h3>Real people on WhatsApp</h3><p>Questions about using it, shedding or your order? Message us and get a human reply.</p></div><a href="https://wa.me/923103699935?text=Hi%20Minoxpak%2C%20I%20have%20a%20question" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Chat with us</a></div>
       </div>
-    </div>
-  </section>
-
-  <!-- PLANS -->
-  <section id="shop" style="padding-top:0">
-    <div class="wrap">
-      <div class="head">
-        <div><span class="eyebrow">Plans</span><h2>Choose your plan</h2></div>
-        <div class="tabs" role="tablist" aria-label="Filter plans">
-          <button class="tab" role="tab" aria-selected="true" data-f="all">All</button>
-          <button class="tab" role="tab" aria-selected="false" data-f="men">Men</button>
-          <button class="tab" role="tab" aria-selected="false" data-f="women">Women</button>
-          <button class="tab" role="tab" aria-selected="false" data-f="kit">Kits</button>
-        </div>
-      </div>
-      <div class="cards" id="cards"></div>
     </div>
   </section>
 
@@ -513,6 +573,37 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
     </div>
   </section>
 
+  <!-- HOW TO USE -->
+  <section id="use" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><div><span class="eyebrow">How to use</span><h2>Twice a day, about a minute</h2></div></div>
+      <div class="use">
+        <div>
+          <h3>Directions</h3>
+          <ol>
+            <li>Start with a dry scalp. Part your hair so you can see the thinning area.</li>
+            <li>Apply 1 mL (6 sprays) directly to the scalp, not the hair.</li>
+            <li>Spread gently with your fingertips, then wash your hands.</li>
+            <li>Let it dry fully before styling, wearing a cap or going to bed.</li>
+            <li>Repeat morning and night. Using more does not work faster.</li>
+          </ol>
+          <p style="color:var(--muted);font-size:.92rem">Active ingredient: minoxidil 5% w/v (men) or 2% w/v (women). 60 mL lasts about one month.</p>
+        </div>
+        <div class="warn">
+          <h3>Before you use it</h3>
+          <ul>
+            <li>For adults 18 and over. External use on the scalp only.</li>
+            <li>Do not use if you are pregnant or breastfeeding.</li>
+            <li>Ask a doctor first if you have a heart condition or take blood pressure medicine.</li>
+            <li>Do not apply to a red, irritated, sunburnt or broken scalp.</li>
+            <li>Stop and see a doctor if you get chest pain, a fast heartbeat, dizziness, or swelling of the hands or feet.</li>
+            <li>Keep away from eyes, children and pets.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- JOURNEY -->
   <section id="results" style="padding-top:0">
     <div class="journey">
@@ -521,7 +612,7 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
         <div class="track">
           <div class="ms"><span class="when">Month 1</span><h3>Shedding is normal</h3><p>Old, weak hairs fall out to make room for new growth.</p></div>
           <div class="ms"><span class="when">Months 2–3</span><h3>Less hair fall</h3><p>Shedding slows and soft new hairs appear.</p></div>
-          <div class="ms"><span class="when">Months 4–6</span><h3>Visible density</h3><p>New hairs thicken and darken. Most people see results here.</p></div>
+          <div class="ms"><span class="when">Months 4–6</span><h3>Visible density</h3><p>New hairs thicken and darken. This is when many people notice a difference.</p></div>
           <div class="ms"><span class="when">Month 6+</span><h3>Keep your gains</h3><p>Keep using it daily to maintain your results.</p></div>
         </div>
       </div>
@@ -532,29 +623,29 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
   <section style="padding-top:0">
     <div class="wrap">
       <div class="head"><div><span class="eyebrow">Compare</span><h2>Why a spray beats the rest</h2></div></div>
-      <div class="cmp-wrap">
+      <div class="cmp-wrap" tabindex="0" role="region" aria-label="Comparison table, scrolls sideways">
         <table class="cmp">
-          <thead><tr><th scope="col"></th><th scope="col" class="us">Minoxpak spray</th><th scope="col">Dropper solutions</th><th scope="col">Oils and shampoos</th></tr></thead>
+          <thead><tr><th scope="col"><span class="vh">Feature</span></th><th scope="col" class="us">Minoxpak spray</th><th scope="col">Dropper solutions</th><th scope="col">Oils and shampoos</th></tr></thead>
           <tbody>
             <tr><th scope="row">Clinically proven to regrow hair</th><td class="us"><span class="yes">✓ Yes</span></td><td><span class="yes">✓ Yes</span></td><td class="no">Not proven</td></tr>
             <tr><th scope="row">Even scalp coverage</th><td class="us"><span class="yes">✓ Fine mist</span></td><td class="no">Patchy drops</td><td class="no">Rinsed off</td></tr>
             <tr><th scope="row">Quick drying, not greasy</th><td class="us"><span class="yes">✓ Yes</span></td><td class="no">Often drips</td><td class="no">Greasy</td></tr>
             <tr><th scope="row">Measured dose</th><td class="us"><span class="yes">✓ 6 sprays = 1 mL</span></td><td>Marked dropper</td><td class="no">No</td></tr>
             <tr><th scope="row">Cash on delivery in Pakistan</th><td class="us"><span class="yes">✓ Yes</span></td><td class="no">Varies</td><td class="no">Varies</td></tr>
-          </tbody>
+                      </tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- REVIEWS -->
-  <section id="reviews" style="padding-top:0">
+  <!-- EVIDENCE -->
+  <section id="evidence" style="padding-top:0">
     <div class="wrap">
-      <div class="head"><div><span class="eyebrow">Reviews</span><h2>Loved by early users</h2></div><span class="sample">Sample reviews. Replace with real customer reviews before launch.</span></div>
+      <div class="head"><div><span class="eyebrow">The evidence</span><h2>What the research says</h2></div><p class="lede" style="max-width:40ch">These findings are about minoxidil, the active ingredient. Results vary from person to person.</p></div>
       <div class="reviews">
-        <article class="review"><span class="stars">★★★★★</span><q>“My crown was going see-through. Four months in, it has filled in and the spray is so much easier than a dropper.”</q><div class="who"><span class="av">A</span><span><b style="color:var(--ink)">Customer name</b><br>Lahore · 5% for men</span></div></article>
-        <article class="review"><span class="stars">★★★★★</span><q>“It dries in minutes. Nobody at work can tell I'm using anything.”</q><div class="who"><span class="av">S</span><span><b style="color:var(--ink)">Customer name</b><br>Karachi · 2% for women</span></div></article>
-        <article class="review"><span class="stars">★★★★★</span><q>“The quiz told me to expect shedding, so I didn't panic. My hairline is thicker now.”</q><div class="who"><span class="av">H</span><span><b style="color:var(--ink)">Customer name</b><br>Islamabad · 6 month plan</span></div></article>
+        <article class="review"><span class="fig">45%</span><div style="display:grid;gap:8px"><h3>More regrowth with 5% than 2%</h3><p>In a 48 week trial of 393 men, 5% topical minoxidil gave 45% more hair regrowth than 2%, and worked sooner.</p><a href="https://pubmed.ncbi.nlm.nih.gov/12196747/" target="_blank" rel="noopener">Olsen et al., J Am Acad Dermatol, 2002</a></div></article>
+        <article class="review"><span class="fig">2×</span><div style="display:grid;gap:8px"><h3>Daily use is what counts</h3><p>The trial used 1 mL twice a day for the full 48 weeks. Follow the same routine to give it a fair chance.</p></div></article>
+        <article class="review"><span class="fig">4 mo</span><div style="display:grid;gap:8px"><h3>Give it time, and be realistic</h3><p>Allow about four months before judging. Minoxidil does not work for everyone, and it cannot revive areas that have been completely bald for years.</p></div></article>
       </div>
     </div>
   </section>
@@ -568,8 +659,9 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
         <details><summary>Is shedding in the first weeks normal?</summary><p>Yes. Minoxidil pushes out old resting hairs so stronger new ones can grow. It usually settles within 2 months.</p></details>
         <details><summary>Should I choose 5% or 2%?</summary><p>5% is the standard strength for men. 2% is commonly recommended for women. The quiz will suggest one, and your doctor or pharmacist can advise too.</p></details>
         <details><summary>What happens if I stop?</summary><p>Minoxidil works while you use it. If you stop, hair it helped regrow gradually sheds over the following months.</p></details>
+        <details><summary>Is it a subscription?</summary><p>No. Each pack is a one-time purchase. A 3 or 6 month pack simply ships all the bottles together at a lower price per bottle.</p></details>
         <details><summary>Are there side effects?</summary><p>Some people get mild itching, dryness or flaking. Stop use and see a doctor if you feel dizzy or have chest pain or a fast heartbeat. Not for use during pregnancy or breastfeeding.</p></details>
-        <details><summary>How do delivery and payment work?</summary><p>We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay with cash on delivery, card, JazzCash or Easypaisa. Delivery is free over Rs. 3,000.</p></details>
+        <details><summary>How do delivery and payment work?</summary><p>We deliver across Pakistan in 2 to 4 working days in plain packaging. Pay cash when it arrives. Delivery is free over Rs. 3,000 and Rs. 250 below that. We confirm every order on WhatsApp before it ships. See <a href="policies.html#shipping">shipping and returns</a>.</p></details>
       </div>
     </div>
   </section>
@@ -592,36 +684,36 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
     <div class="foot">
       <div>
         <a href="#top" class="logo" style="padding-left:0"><span class="logo-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#leaf"/></svg></span><span>minoxpak</span></a>
-        <p style="color:var(--muted);margin-top:12px;max-width:36ch">Launch offers and hair care tips, straight to your inbox.</p>
-        <form class="newsletter" id="newsForm"><label for="newsEmail" style="position:absolute;left:-9999px">Email</label><input id="newsEmail" type="email" placeholder="Email address" required><button class="btn btn-brand btn-sm" type="submit">Subscribe</button></form>
-        <div class="pay"><span>COD</span><span>VISA</span><span>Mastercard</span><span>JazzCash</span><span>Easypaisa</span></div>
+        <p style="color:var(--muted);margin-top:12px;max-width:36ch">Launch offers and hair care tips, sent on WhatsApp. No spam.</p>
+        <a class="btn btn-brand btn-sm" style="margin-top:14px" href="https://wa.me/923103699935?text=Please%20add%20me%20to%20Minoxpak%20offers%20and%20tips" target="_blank" rel="noopener">Get offers on WhatsApp</a>
+        <div class="pay"><span>Cash on delivery</span></div>
       </div>
-      <div><h4>Shop</h4><ul><li><a href="#men">For men</a></li><li><a href="#women">For women</a></li><li><a href="#shop">Plans and kits</a></li></ul></div>
-      <div><h4>Learn</h4><ul><li><a href="#how">How it works</a></li><li><a href="#results">What to expect</a></li><li><a href="#faq">FAQ</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li>hello@minoxpak.com</li><li>WhatsApp +92 3XX XXXXXXX</li><li><a href="#faq">Shipping and returns</a></li><li><a href="#faq">Privacy policy</a></li></ul></div>
+      <div><h3>Shop</h3><ul><li><a href="#men">For men</a></li><li><a href="#women">For women</a></li><li><a href="#shop">Plans and kits</a></li></ul></div>
+      <div><h3>Learn</h3><ul><li><a href="#how">How it works</a></li><li><a href="#use">How to use</a></li><li><a href="#results">What to expect</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h3>Contact</h3><ul><li><a href="https://wa.me/923103699935" target="_blank" rel="noopener">WhatsApp +92 310 3699935</a></li><li><a href="policies.html#shipping">Shipping and returns</a></li><li><a href="policies.html#privacy">Privacy policy</a></li></ul></div>
     </div>
     <div class="legal">
-      <span>Minoxpak is for external use only. Results vary between people. This site does not give medical advice; speak to a doctor if you have a heart condition, are pregnant or breastfeeding. DRAP registration no. to be added.</span>
+      <span>Minoxpak is for external use only. Results vary between people. This site does not give medical advice; speak to a doctor if you have a heart condition, are pregnant or breastfeeding. For adults 18 and over.</span>
       <span>Photos: <a href="https://unsplash.com/photos/blonde-woman-in-black-top-portrait-et_78QkMMQs" target="_blank" rel="noopener">Rafaella Mendes Diniz</a> on Unsplash; <a href="https://www.pexels.com/photo/man-drying-hair-with-hairdryer-in-mirror-4746754/" target="_blank" rel="noopener">Ketut Subiyanto</a> on Pexels. Models are illustrative, not Minoxpak customers.</span>
       <span>© 2026 Minoxpak. All rights reserved.</span>
     </div>
   </div>
 </footer>
 
-<div class="mcta"><button class="btn btn-accent" data-quiz>Find my plan</button><a href="#shop" class="btn btn-ghost">Shop</a></div>
-<a class="wa" href="https://wa.me/920000000000" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1.1 2.7 11.5 11.5 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg></a>
+<nav class="mcta" aria-label="Quick actions"><button class="btn btn-accent" data-quiz>Find my plan</button><a href="#shop" class="btn btn-ghost">Shop</a></nav>
+<aside aria-label="WhatsApp support"><a class="wa" href="https://wa.me/923103699935?text=Hi%20Minoxpak%2C%20I%20have%20a%20question" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1.1 2.7 11.5 11.5 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg></a></aside>
 
 <div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
-  <div class="d-head"><h3>Your cart</h3><button class="ib" id="cartClose" aria-label="Close cart">✕</button></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Shopping cart" tabindex="-1">
+  <div class="d-head"><h2>Your cart</h2><button class="ib" id="cartClose" aria-label="Close cart">✕</button></div>
   <div class="d-body" id="cartBody"></div>
   <div class="d-foot" id="cartFoot"></div>
 </aside>
 
-<div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-label="Hair quiz" aria-hidden="true">
+<div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-label="Hair quiz" tabindex="-1">
   <div class="wrap q-top">
     <span class="logo" style="font-size:1.2rem;padding-left:0"><span class="logo-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#leaf"/></svg></span></span>
-    <div class="q-prog"><i id="qProg"></i></div>
+    <div class="q-prog" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="qBar"><i id="qProg"></i></div>
     <button class="ib" id="quizClose" aria-label="Close quiz">✕</button>
   </div>
   <div class="wrap q-main"><div class="q-inner" id="qInner"></div></div>
@@ -629,17 +721,22 @@ footer.site{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));bord
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const FREE_SHIP=3000, SHIP_FEE=250;
+const FREE_SHIP=3000, SHIP_FEE=250, MAX_QTY=10, WA='923103699935';
+// "was" is what the same bottles cost bought one at a time, so the saving shown is real.
 const PRODUCTS=[
-  {id:'m5x6',cat:'men',name:'Men 6 Month Plan',line:'6 × 60 mL · 5% spray',tint:'t-teal',sym:'bottle',price:12499,was:17994,months:6,multi:true,chip:'Best value'},
-  {id:'m5x3',cat:'men',name:'Men 3 Month Plan',line:'3 × 60 mL · 5% spray',tint:'t-teal',sym:'bottle',price:6399,was:8997,months:3,multi:true,chip:'Popular'},
-  {id:'m5',cat:'men',name:'Minoxpak 5% for Men',line:'60 mL · 1 month',tint:'t-sky',sym:'bottle',price:2499,was:2999,months:1,chip:'For men'},
-  {id:'w2x3',cat:'women',name:'Women 3 Month Plan',line:'3 × 60 mL · 2% spray',tint:'t-coral',sym:'bottleRose',price:5599,was:8097,months:3,multi:true,chip:'Popular'},
-  {id:'w2',cat:'women',name:'Minoxpak 2% for Women',line:'60 mL · 1 month',tint:'t-coral',sym:'bottleRose',price:2199,was:2699,months:1,chip:'For women'},
-  {id:'kit',cat:'kit',name:'Regrowth Kit',line:'5% spray + 0.5 mm derma roller',tint:'t-lilac',sym:'kit',price:3999,was:4799,months:1,chip:'Complete routine'}
+  {id:'m5x6',cat:'men',name:'Men 6 Month Pack',line:'6 × 60 mL · 5% spray · one payment',tint:'t-teal',sym:'bottle',price:12499,was:14994,months:6,multi:true,chip:'Best value'},
+  {id:'m5x3',cat:'men',name:'Men 3 Month Pack',line:'3 × 60 mL · 5% spray · one payment',tint:'t-teal',sym:'bottle',price:6399,was:7497,months:3,multi:true,chip:'Popular'},
+  {id:'m5',cat:'men',name:'Minoxpak 5% for Men',line:'60 mL · 1 month',tint:'t-sky',sym:'bottle',price:2499,months:1,chip:'For men',up:'m5x3'},
+  {id:'w2x3',cat:'women',name:'Women 3 Month Pack',line:'3 × 60 mL · 2% spray · one payment',tint:'t-coral',sym:'bottleRose',price:5599,was:6597,months:3,multi:true,chip:'Popular'},
+  {id:'w2',cat:'women',name:'Minoxpak 2% for Women',line:'60 mL · 1 month',tint:'t-coral',sym:'bottleRose',price:2199,months:1,chip:'For women',up:'w2x3'},
+  {id:'kit',cat:'kit',also:'men',name:'Regrowth Kit',line:'5% spray + 0.5 mm derma roller',tint:'t-lilac',sym:'kit',price:3999,months:1,chip:'Complete routine'}
 ];
 const rs=n=>'Rs. '+n.toLocaleString('en-PK');
 const $=s=>document.querySelector(s);
+const waLink=t=>`https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+// Analytics hook: events queue here until a tag manager or pixel is added.
+window.dataLayer=window.dataLayer||[];
+const track=(event,data={})=>window.dataLayer.push({event,...data});
 const one=(id,h,extra='')=>`<svg viewBox="0 0 120 260" style="height:${h};width:auto;${extra}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const art=(p,h)=>{
   if(p.sym==='kit') return one('bottle',h)+one('roller',`calc(${h} * .85)`,'margin-left:-14%');
@@ -647,21 +744,29 @@ const art=(p,h)=>{
   return one(p.sym,h);
 };
 const P=id=>PRODUCTS.find(p=>p.id===id);
+const priceHTML=p=>`<div class="price"><b>${rs(p.price)}</b>${p.was?`<s><span class="vh">was </span>${rs(p.was)}</s>`:''}${p.months>1?`<small>${rs(Math.round(p.price/p.months))} a month</small>`:''}</div>`;
 
 // plans + filter
+let filter='all';
 function renderCards(f){
-  $('#cards').innerHTML=PRODUCTS.filter(p=>f==='all'||p.cat===f).map(p=>{
-    const off=Math.round((1-p.price/p.was)*100);
-    const per=p.months>1?`<small>${rs(Math.round(p.price/p.months))}/mo</small>`:'';
-    return `<article class="card"><div class="img ${p.tint}">${art(p,'72%')}<span class="chip">${p.chip}</span><span class="chip sale">−${off}%</span></div>
+  $('#cards').innerHTML=PRODUCTS.filter(p=>f==='all'||p.cat===f||p.also===f).map(p=>{
+    const sale=p.was?`<span class="chip sale">Save ${Math.round((1-p.price/p.was)*100)}%</span>`:'';
+    return `<article class="card"><div class="img ${p.tint}">${art(p,'72%')}<span class="chip">${p.chip}</span>${sale}</div>
       <div class="body"><h3>${p.name}</h3><p>${p.line}</p>
-        <div class="price"><b>${rs(p.price)}</b><s>${rs(p.was)}</s>${per}</div>
-        <button class="btn btn-brand" data-add="${p.id}">Add to cart</button></div></article>`;
+        ${priceHTML(p)}
+        <button class="btn btn-brand" data-add="${p.id}">Add to cart<span class="vh">: ${p.name}</span></button></div></article>`;
   }).join('');
 }
-function setFilter(f){document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',String(t.dataset.f===f)));renderCards(f);}
+function setFilter(f){
+  filter=f;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.f===f)));
+  renderCards(f);
+  // keep the 3D bottle in step with the chosen range
+  const b=$('#hero-3d'); if(b&&b.bottle3d&&(f==='men'||f==='women')) b.bottle3d.setVariant(f);
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>setFilter(t.dataset.f));
 document.querySelectorAll('[data-filter-link]').forEach(a=>a.addEventListener('click',()=>setFilter(a.dataset.filterLink)));
+document.addEventListener('bottle3d:variant',e=>{if(e.detail&&e.detail.variant!==filter)setFilter(e.detail.variant);});
 renderCards('all');
 
 document.addEventListener('click',e=>{
@@ -670,87 +775,181 @@ document.addEventListener('click',e=>{
 });
 
 // menu
-$('#menuBtn').onclick=()=>{const m=$('#mobileMenu');m.hidden=!m.hidden;$('#menuBtn').setAttribute('aria-expanded',String(!m.hidden));};
-$('#mobileMenu').addEventListener('click',e=>{if(e.target.tagName==='A')$('#mobileMenu').hidden=true;});
+const menuBtn=$('#menuBtn'), menu=$('#mobileMenu');
+function setMenu(open){menu.hidden=!open;menuBtn.setAttribute('aria-expanded',String(open));menuBtn.setAttribute('aria-label',open?'Close menu':'Open menu');}
+menuBtn.onclick=()=>setMenu(menu.hidden);
+menu.addEventListener('click',e=>{if(e.target.tagName==='A')setMenu(false);});
+document.addEventListener('click',e=>{if(!menu.hidden&&!e.target.closest('#mobileMenu,#menuBtn'))setMenu(false);});
+
+// dialogs: while one is open the rest of the page is inert, so focus and screen readers stay inside it
+let modal=null, lastFocus=null;
+function showModal(el){
+  if(modal&&modal!==el) hideModal(modal,true);
+  if(modal!==el) lastFocus=document.activeElement;
+  modal=el; el.classList.add('open');
+  [...document.body.children].forEach(c=>{if(c!==el&&c.id!=='toast'&&c.tagName!=='SCRIPT'&&c.tagName!=='STYLE')c.inert=true;});
+  document.body.style.overflow='hidden';
+}
+function hideModal(el,keepFocus){
+  if(modal!==el) return;
+  el.classList.remove('open'); modal=null;
+  [...document.body.children].forEach(c=>{c.inert=false;});
+  document.body.style.overflow='';
+  if(!keepFocus&&lastFocus&&document.contains(lastFocus)) lastFocus.focus({preventScroll:true});
+}
 
 // quiz
 const QS=[
   {k:'who',q:'Who is this treatment for?',o:[['m','Me, a man'],['f','Me, a woman']]},
+  {k:'safe',q:'Do any of these apply to you?',o:{
+    m:[['none','None of these'],['u18','I am under 18'],['heart','A heart condition, or I take blood pressure medicine'],['scalp','My scalp is red, irritated or broken']],
+    f:[['none','None of these'],['u18','I am under 18'],['preg','I am pregnant or breastfeeding'],['heart','A heart condition, or I take blood pressure medicine'],['scalp','My scalp is red, irritated or broken']]}},
   {k:'where',q:'Where are you losing hair?',o:{m:[['line','Receding hairline','Temples and front'],['crown','Thinning crown','The top or back of the head'],['all','Overall thinning','All over the scalp']],f:[['part','Widening part','The part line looks wider'],['temple','Thinning temples','Around the hairline'],['all','Overall thinning','Less volume all over']]}},
   {k:'how',q:'How long has it been happening?',o:[['new','Less than 1 year'],['mid','1 to 3 years'],['long','More than 3 years']]},
-  {k:'goal',q:'What matters most to you?',o:[['try','Trying it out first','Start with one month'],['commit','Seeing real results','A plan long enough to work'],['max','Doing everything I can','Spray plus a weekly derma roller']]}
+  {k:'goal',q:'What matters most to you?',o:{
+    m:[['try','Trying it out first','Start with one month'],['commit','Seeing real results','A pack long enough to work'],['max','Doing everything I can','Spray plus a weekly derma roller']],
+    f:[['try','Trying it out first','Start with one month'],['commit','Seeing real results','A pack long enough to work']]}}
 ];
+const WHERE={line:'Apply along the hairline and temples, where the scalp shows through.',crown:'Apply to the crown, parting the hair so the spray reaches the scalp.',part:'Apply along your part line, moving the part a little each time.',temple:'Apply around the temples and front hairline.',all:'Work in sections so the spray reaches the scalp across the top of your head.'};
+const STOP={u18:'Minoxpak is for adults aged 18 and over.',preg:'Minoxidil should not be used during pregnancy or while breastfeeding.',heart:'Minoxidil can affect blood pressure and heart rate, so your doctor should approve it first.',scalp:'Minoxidil should not go on irritated or broken skin. Let your scalp heal, or see a doctor, before starting.'};
 let qi=0, ans={};
-function openQuiz(){qi=0;ans={};renderQ();$('#quiz').classList.add('open');$('#quiz').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-function closeQuiz(){$('#quiz').classList.remove('open');$('#quiz').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function openQuiz(){qi=0;ans={};showModal($('#quiz'));renderQ();track('quiz_start');}
+function closeQuiz(){hideModal($('#quiz'));}
 $('#quizClose').onclick=closeQuiz;
+function setProg(f){$('#qProg').style.width=f*100+'%';$('#qBar').setAttribute('aria-valuenow',Math.round(f*100));}
+function backBtn(){const bk=$('#qBack'); if(bk) bk.onclick=()=>{qi--;renderQ();};}
 function renderQ(){
   const inner=$('#qInner');
-  $('#qProg').style.width=(qi/QS.length)*100+'%';
-  if(qi>=QS.length){$('#qProg').style.width='100%';return renderPlan();}
+  setProg(qi/QS.length);
+  if(qi>=QS.length){setProg(1);return renderPlan();}
   const s=QS[qi]; const opts=Array.isArray(s.o)?s.o:s.o[ans.who];
-  inner.innerHTML=`${qi?'<button class="q-back" id="qBack">← Back</button>':''}<span class="eyebrow">Question ${qi+1} of ${QS.length}</span><h2>${s.q}</h2>
+  inner.innerHTML=`${qi?'<button class="q-back" id="qBack">← Back</button>':''}<span class="eyebrow">Question ${qi+1} of ${QS.length}</span><h2 tabindex="-1">${s.q}</h2>
     <div class="opts">${opts.map(([v,l,h])=>`<button class="opt" data-v="${v}"><span class="dot"></span><span>${l}${h?`<small>${h}</small>`:''}</span></button>`).join('')}</div>`;
-  inner.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ans[s.k]=b.dataset.v;qi++;renderQ();});
-  const bk=$('#qBack'); if(bk) bk.onclick=()=>{qi--;renderQ();};
-  inner.querySelector('.opt').focus({preventScroll:true});
+  inner.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    ans[s.k]=b.dataset.v;
+    if(s.k==='safe'&&b.dataset.v!=='none') return renderStop(b.dataset.v);
+    qi++;renderQ();
+  });
+  backBtn();
+  inner.querySelector('h2').focus({preventScroll:true});
+}
+function renderStop(why){
+  setProg(1); track('quiz_screened_out',{reason:why});
+  $('#qInner').innerHTML=`<button class="q-back" id="qBack">← Back</button><span class="eyebrow">Please check first</span><h2 tabindex="-1">Speak to a doctor before using minoxidil</h2>
+    <p class="lede">${STOP[why]}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-brand" target="_blank" rel="noopener" href="${waLink('Hi Minoxpak, I have a question before I order.')}">Ask us on WhatsApp</a><button class="btn btn-ghost" id="qDone">Close</button></div>
+    <p style="color:var(--muted);font-size:.85rem">This quiz is a guide, not medical advice.</p>`;
+  $('#qBack').onclick=()=>renderQ();
+  $('#qDone').onclick=closeQuiz;
+  $('#qInner h2').focus({preventScroll:true});
 }
 function renderPlan(){
   let id;
-  if(ans.goal==='max') id = ans.who==='f' ? 'w2x3' : 'kit';
-  else if(ans.goal==='try') id = ans.who==='f' ? 'w2' : 'm5';
-  else id = ans.who==='f' ? 'w2x3' : (ans.how==='long'?'m5x6':'m5x3');
+  if(ans.who==='f') id = ans.goal==='try' ? 'w2' : 'w2x3';
+  else if(ans.goal==='max') id='kit';
+  else if(ans.goal==='try') id='m5';
+  else id = ans.how==='long'?'m5x6':'m5x3';
   const p=P(id);
   const why = ans.who==='f' ? '2% minoxidil is the strength commonly recommended for women.' : '5% minoxidil is the standard strength for male pattern hair loss.';
   const timing = ans.how==='long' ? 'Hair loss that has gone on for years needs steady, longer use.' : 'Starting early gives you the best chance to keep the hair you have.';
-  $('#qInner').innerHTML=`<button class="q-back" id="qBack">← Back</button><span class="eyebrow">Your recommended plan</span><h2>We suggest <span class="grad">${p.name}</span></h2>
+  track('quiz_complete',{plan:id});
+  $('#qInner').innerHTML=`<button class="q-back" id="qBack">← Back</button><span class="eyebrow">Your recommended plan</span><h2 tabindex="-1">We suggest <span class="grad">${p.name}</span></h2>
     <div class="plan"><div class="img ${p.tint}">${art(p,'170px')}</div><div class="txt"><h3>${p.name}</h3><p style="color:var(--muted)">${p.line}</p>
-      <ul><li>${why}</li><li>${timing}</li><li>Apply 1 mL twice a day. Expect first results in 3 to 4 months.</li></ul>
-      <div class="price"><b>${rs(p.price)}</b><s>${rs(p.was)}</s>${p.months>1?`<small>${rs(Math.round(p.price/p.months))}/mo</small>`:''}</div></div></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-accent" id="qAdd">Add plan to cart</button><button class="btn btn-ghost" id="qAll">See all plans</button></div>
-    <p style="color:var(--muted);font-size:.85rem">This quiz is a guide, not a medical diagnosis. If you have a heart condition or are pregnant, speak to a doctor first.</p>`;
-  $('#qBack').onclick=()=>{qi--;renderQ();};
+      <ul><li>${why}</li><li>${timing}</li><li>${WHERE[ans.where]||''}</li><li>Use 1 mL twice a day. Expect first results in 3 to 4 months.</li></ul>
+      ${priceHTML(p)}</div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-accent" id="qAdd">Add to cart</button><button class="btn btn-ghost" id="qAll">See all plans</button><a class="btn btn-ghost" target="_blank" rel="noopener" href="${waLink(`Hi Minoxpak, the quiz suggested ${p.name} (${rs(p.price)}). I have a question.`)}">Ask on WhatsApp</a></div>
+    <p style="color:var(--muted);font-size:.85rem">This quiz is a guide, not a medical diagnosis. Results vary and minoxidil does not work for everyone.</p>`;
+  backBtn();
   $('#qAdd').onclick=()=>{closeQuiz();addToCart(id);};
-  $('#qAll').onclick=()=>{closeQuiz();location.hash='#shop';};
+  $('#qAll').onclick=()=>{closeQuiz();$('#shop').scrollIntoView();};
+  $('#qInner h2').focus({preventScroll:true});
 }
 
 // cart
-let cart=[];try{cart=JSON.parse(localStorage.getItem('minoxpak-cart3')||'[]');}catch(e){}
-cart=cart.filter(l=>P(l.id));
+const clampQ=q=>Math.min(MAX_QTY,Math.max(1,Math.floor(Number(q))||1));
+let cart=[];
+try{const raw=JSON.parse(localStorage.getItem('minoxpak-cart3')||'[]'); if(Array.isArray(raw)) cart=raw.filter(l=>l&&P(l.id)).map(l=>({id:l.id,q:clampQ(l.q)}));}catch(e){}
 const save=()=>{try{localStorage.setItem('minoxpak-cart3',JSON.stringify(cart));}catch(e){}};
-let placed=false;
-function addToCart(id){const l=cart.find(x=>x.id===id);l?l.q++:cart.push({id,q:1});placed=false;save();render();toast('Added to cart');openCart();}
+let placed=null;
+function addToCart(id){
+  const l=cart.find(x=>x.id===id);
+  if(l){if(l.q>=MAX_QTY){toast(`Maximum ${MAX_QTY} per order`);openCart();return;}l.q++;}else cart.push({id,q:1});
+  placed=null;save();render();track('add_to_cart',{id,price:P(id).price});openCart();
+}
+const totals=()=>{const sub=cart.reduce((a,l)=>a+P(l.id).price*l.q,0),ship=sub>=FREE_SHIP?0:SHIP_FEE;return {sub,ship,total:sub+ship};};
 function render(){
   $('#cartCount').textContent=cart.reduce((a,l)=>a+l.q,0);
   const body=$('#cartBody'),foot=$('#cartFoot');
-  if(placed){body.innerHTML=`<div class="ok"><b>Order received.</b><br>This is a demo checkout, so no real order was placed yet.</div>`;foot.innerHTML=`<button class="btn btn-ghost btn-block" id="cont">Continue shopping</button>`;$('#cont').onclick=closeCart;return;}
-  if(!cart.length){body.innerHTML=`<p class="empty">Your cart is empty.</p>`;foot.innerHTML=`<button class="btn btn-accent btn-block" id="cont" data-quiz>Find my plan</button>`;$('#cont').addEventListener('click',closeCart);return;}
+  if(placed){
+    body.innerHTML=`<div class="ok" role="status"><b>Almost done. Send the WhatsApp message to confirm.</b>
+      <span>Order ${placed.ref} · ${rs(placed.total)} · cash on delivery</span>
+      <ul>${placed.lines.map(l=>`<li>${l}</li>`).join('')}</ul>
+      <span>WhatsApp should have opened with your order filled in. Press send there and we will reply to confirm it. If it did not open, use the button below.</span></div>`;
+    foot.innerHTML=`<a class="btn btn-accent btn-block" target="_blank" rel="noopener" href="${placed.url}">Open WhatsApp to send order</a><button class="btn btn-ghost btn-block" id="cont">Continue shopping</button>`;
+    $('#cont').onclick=closeCart;return;
+  }
+  if(!cart.length){body.innerHTML=`<p class="empty">Your cart is empty.</p>`;foot.innerHTML=`<button class="btn btn-accent btn-block" data-quiz>Find my plan</button>`;return;}
+  const up=cart.length===1&&cart[0].q===1&&P(cart[0].id).up&&P(P(cart[0].id).up);
   body.innerHTML=cart.map((l,i)=>{const p=P(l.id);return `<div class="li"><div class="th ${p.tint}">${art(p,'60px')}</div>
-    <div class="meta"><b>${p.name}</b><small>${p.line}</small><div><span class="qty"><button aria-label="Decrease" data-dec="${i}">−</button><span>${l.q}</span><button aria-label="Increase" data-inc="${i}">+</button></span><button class="rm" data-rm="${i}">Remove</button></div></div>
-    <span class="lp">${rs(p.price*l.q)}</span></div>`}).join('');
-  const sub=cart.reduce((a,l)=>a+P(l.id).price*l.q,0),ship=sub>=FREE_SHIP?0:SHIP_FEE;
+    <div class="meta"><b>${p.name}</b><small>${p.line}</small><div><span class="qty"><button aria-label="Decrease quantity of ${p.name}" data-dec="${i}">−</button><span aria-label="Quantity">${l.q}</span><button aria-label="Increase quantity of ${p.name}" data-inc="${i}" ${l.q>=MAX_QTY?'disabled':''}>+</button></span><button class="rm" data-rm="${i}" aria-label="Remove ${p.name}">Remove</button></div></div>
+    <span class="lp">${rs(p.price*l.q)}</span></div>`}).join('')
+    +(up?`<div class="upsell"><span><b>Results take 3 to 4 months.</b> The ${up.name} is ${rs(Math.round(up.price/up.months))} a month instead of ${rs(P(cart[0].id).price)}, with free delivery.</span><button class="btn btn-brand btn-sm" data-swap="${up.id}">Switch to ${up.name} · ${rs(up.price)}</button></div>`:'');
+  const {sub,ship,total}=totals();
   foot.innerHTML=`<div class="bar"><i style="width:${Math.min(100,sub/FREE_SHIP*100)}%"></i></div>
     <span class="note">${ship?`Add ${rs(FREE_SHIP-sub)} more for free delivery`:'You have free delivery'}</span>
     <div class="row"><span>Subtotal</span><span>${rs(sub)}</span></div><div class="row"><span>Delivery</span><span>${ship?rs(ship):'Free'}</span></div>
-    <div class="row total"><span>Total</span><span>${rs(sub+ship)}</span></div>
-    <form class="co" id="co">
-      <label for="co-name">Full name<input id="co-name" required autocomplete="name"></label>
-      <label for="co-phone">Phone<input id="co-phone" required inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel"></label>
-      <label for="co-city">City<select id="co-city" required><option value="">Select city</option><option>Karachi</option><option>Lahore</option><option>Islamabad</option><option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option><option>Peshawar</option><option>Quetta</option><option>Other</option></select></label>
-      <label for="co-addr">Address<textarea id="co-addr" rows="2" required autocomplete="street-address"></textarea></label>
-      <button class="btn btn-accent btn-block" type="submit">Place order · Cash on delivery</button>
+    <div class="row total"><span>Total</span><span>${rs(total)}</span></div>
+    <form class="co" id="co" novalidate>
+      <label for="co-name">Full name<input id="co-name" required autocomplete="name" maxlength="80"></label>
+      <label for="co-phone">Mobile number<input id="co-phone" type="tel" required inputmode="tel" placeholder="03XX XXXXXXX" autocomplete="tel" maxlength="16" aria-describedby="co-err"></label>
+      <label for="co-city">City<select id="co-city" required><option value="">Select city</option><option>Karachi</option><option>Lahore</option><option>Islamabad</option><option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option><option>Peshawar</option><option>Quetta</option><option>Hyderabad</option><option>Sialkot</option><option>Gujranwala</option><option value="Other">Other city</option></select></label>
+      <label for="co-city2" id="co-city2-wrap" hidden>City name<input id="co-city2" autocomplete="address-level2" maxlength="60"></label>
+      <label for="co-addr">Full address<textarea id="co-addr" rows="2" required autocomplete="street-address" maxlength="300"></textarea></label>
+      <span class="err" id="co-err" role="alert"></span>
+      <button class="btn btn-accent btn-block" type="submit">Order on WhatsApp · Cash on delivery</button>
+      <span class="note">Opens WhatsApp with your order filled in. You pay nothing until it is delivered.</span>
     </form>`;
-  $('#co').addEventListener('submit',e=>{e.preventDefault();cart=[];placed=true;save();render();});
+  $('#co-city').onchange=e=>{const o=e.target.value==='Other';$('#co-city2-wrap').hidden=!o;$('#co-city2').required=o;};
+  $('#co').addEventListener('submit',placeOrder);
+  $('#co').addEventListener('input',()=>{$('#co-err').textContent='';});
+}
+const cleanPhone=v=>{const d=v.replace(/[\s\-().]/g,'').replace(/^(\+|00)?92/,'0');return /^03\d{9}$/.test(d)?d:null;};
+function placeOrder(e){
+  e.preventDefault();
+  const err=m=>{$('#co-err').textContent=m;};
+  const name=$('#co-name').value.trim(), phone=cleanPhone($('#co-phone').value), addr=$('#co-addr').value.trim();
+  const city=$('#co-city').value==='Other'?$('#co-city2').value.trim():$('#co-city').value;
+  if(name.length<2){err('Please enter your full name.');$('#co-name').focus();return;}
+  if(!phone){err('Please enter a valid mobile number, like 0310 1234567.');$('#co-phone').focus();return;}
+  if(!city){err('Please choose or type your city.');($('#co-city').value==='Other'?$('#co-city2'):$('#co-city')).focus();return;}
+  if(addr.length<8){err('Please enter your full delivery address.');$('#co-addr').focus();return;}
+  const {sub,ship,total}=totals();
+  const ref='MP-'+Date.now().toString(36).toUpperCase().slice(-6);
+  const lines=cart.map(l=>{const p=P(l.id);return `${l.q} × ${p.name} (${p.line.split(' · one payment')[0]}): ${rs(p.price*l.q)}`;});
+  const msg=[`New order ${ref}`,'',...lines,'',`Subtotal: ${rs(sub)}`,`Delivery: ${ship?rs(ship):'Free'}`,`Total: ${rs(total)} (cash on delivery)`,'',`Name: ${name}`,`Mobile: ${phone}`,`City: ${city}`,`Address: ${addr}`].join('\n');
+  const url=waLink(msg);
+  track('order_placed',{ref,total,items:cart.map(l=>({id:l.id,q:l.q}))});
+  placed={ref,total,lines,url}; cart=[]; save(); render();
+  window.open(url,'_blank','noopener');
+  $('#cartBody .ok').setAttribute('tabindex','-1'); $('#cartBody .ok').focus({preventScroll:true});
 }
 $('#cartBody').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-  if(d.inc!==undefined)cart[+d.inc].q++;else if(d.dec!==undefined){if(--cart[+d.dec].q<1)cart.splice(+d.dec,1);}else if(d.rm!==undefined)cart.splice(+d.rm,1);else return;save();render();});
+  if(d.swap){cart=[{id:d.swap,q:1}];track('upsell_accepted',{id:d.swap});}
+  else if(d.inc!==undefined){if(cart[+d.inc].q<MAX_QTY)cart[+d.inc].q++;}
+  else if(d.dec!==undefined){if(--cart[+d.dec].q<1)cart.splice(+d.dec,1);}
+  else if(d.rm!==undefined)cart.splice(+d.rm,1);
+  else return;
+  save();render();
+  // re-rendering replaces the button that was pressed, so put focus back somewhere sensible
+  const again=d.inc!==undefined?`[data-inc="${d.inc}"]`:d.dec!==undefined?`[data-dec="${d.dec}"]`:null;
+  ((again&&$('#cartBody '+again+':not([disabled])'))||$('#cartClose')).focus({preventScroll:true});
+});
 const drawer=$('#drawer'),scrim=$('#scrim');
-function openCart(){drawer.classList.add('open');scrim.classList.add('open');drawer.setAttribute('aria-hidden','false');}
-function closeCart(){drawer.classList.remove('open');scrim.classList.remove('open');drawer.setAttribute('aria-hidden','true');if(placed){placed=false;render();}}
+function openCart(){showModal(drawer);scrim.inert=false;scrim.classList.add('open');$('#cartClose').focus({preventScroll:true});}
+function closeCart(){hideModal(drawer);scrim.classList.remove('open');if(placed){placed=null;render();}}
 $('#cartOpen').onclick=openCart;$('#cartClose').onclick=closeCart;scrim.onclick=closeCart;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeQuiz();}});
-let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1600);}
-$('#newsForm').addEventListener('submit',e=>{e.preventDefault();e.target.reset();toast('Thanks, you are subscribed');});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(modal===drawer)closeCart();else if(modal)closeQuiz();else if(!menu.hidden){setMenu(false);menuBtn.focus();}});
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
 render();
 </script>
 

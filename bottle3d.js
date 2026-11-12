@@ -25,9 +25,9 @@ const CSS = `
 .mx3d.mx3d-ready > .mx3d-fallback{opacity:0;pointer-events:none}
 .mx3d-ui{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
 .mx3d-switch{pointer-events:auto;display:inline-flex;gap:3px;padding:4px;border-radius:999px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px -14px rgba(0,0,0,.35),inset 0 0 0 1px rgba(0,0,0,.05)}
-.mx3d-switch button{font:700 13px/1 var(--f,"Plus Jakarta Sans",system-ui,sans-serif);letter-spacing:-.01em;border:0;border-radius:999px;padding:10px 15px;background:transparent;color:#5c5852;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s}
+.mx3d-switch button{font:700 13px/1 var(--f,"Sora",system-ui,sans-serif);letter-spacing:-.01em;border:0;border-radius:999px;padding:10px 15px;min-height:44px;background:transparent;color:#5c5852;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s}
 .mx3d-switch button[aria-pressed="true"]{background:#141414;color:#fff}
-.mx3d-hint{font:700 10.5px/1 var(--f,"Plus Jakarta Sans",system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase;color:rgba(20,20,20,.5);display:flex;gap:9px;align-items:center;opacity:0;transition:opacity .6s .8s;white-space:nowrap}
+.mx3d-hint{font:700 10.5px/1 var(--f,"Sora",system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase;color:rgba(20,20,20,.5);display:flex;gap:9px;align-items:center;opacity:0;transition:opacity .6s .8s;white-space:nowrap}
 .mx3d-hint::before,.mx3d-hint::after{content:"";width:18px;height:1px;background:currentColor}
 .mx3d.mx3d-ready .mx3d-hint{opacity:1}
 .mx3d.mx3d-touched .mx3d-hint{opacity:0;transition-delay:0s}
@@ -53,6 +53,8 @@ function setup(el) {
     const st = document.createElement('style'); st.id = 'mx3d-style'; st.textContent = CSS; document.head.appendChild(st);
   }
   if (!webglOK()) return; // keep the existing fallback art untouched
+  const nav = navigator;
+  if ((nav.connection && nav.connection.saveData) || (nav.deviceMemory && nav.deviceMemory <= 2)) return; // data saver or low-memory phone: stay on the fallback
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let variant = VARIANTS[el.dataset.variant] ? el.dataset.variant : 'men';
@@ -99,7 +101,7 @@ function setup(el) {
   async function init() {
     const THREE = await import(THREE_URL);
     try {
-      await Promise.all(['800 100px "Plus Jakarta Sans"', '500 36px "Plus Jakarta Sans"', '400 100px "Instrument Serif"', 'italic 400 100px "Instrument Serif"']
+      await Promise.all(['800 100px "Sora"', '500 36px "Sora"', '400 100px "Instrument Serif"', 'italic 400 100px "Instrument Serif"']
         .map(f => document.fonts.load(f)));
     } catch (e) { /* label falls back to system fonts */ }
 
@@ -364,7 +366,7 @@ function webglOK() {
 /* Front-panel label for flat or curved fronts (prism, pebble): white ink on a transparent W x H canvas. */
 function drawFront(V, W, H) {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d'), sans = '"Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif', serif = '"Instrument Serif", Georgia, serif';
+  const g = c.getContext('2d'), sans = '"Sora", "Helvetica Neue", Arial, sans-serif', serif = '"Instrument Serif", Georgia, serif';
   const track = px => { try { g.letterSpacing = px + 'px'; } catch (e) { /* older browsers */ } };
   const cx = W / 2, u = H / 1400;
   g.fillStyle = g.strokeStyle = '#F7F3EC'; g.textAlign = 'center';
@@ -388,7 +390,7 @@ function drawFront(V, W, H) {
    The centre (x = 1536) faces the viewer; the seam sits at the back. */
 function drawLabel(V) {
   const W = 3072, H = 1100, c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d'), sans = '"Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif', serif = '"Instrument Serif", Georgia, serif';
+  const g = c.getContext('2d'), sans = '"Sora", "Helvetica Neue", Arial, sans-serif', serif = '"Instrument Serif", Georgia, serif';
   const track = px => { try { g.letterSpacing = px + 'px'; } catch (e) { /* older browsers */ } };
   const cx = W / 2;
   g.fillStyle = g.strokeStyle = '#F7F3EC'; g.textAlign = 'center';
