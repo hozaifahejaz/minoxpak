@@ -1,0 +1,36 @@
+/* Shared look for the guide pages: same palette and type as the store. */
+:root{--bg:#F6F7F6;--surface:#fff;--tint:#EDF2F2;--ink:#0B1F24;--muted:#56686D;--line:#E2E8E8;--brand:#0E4F5C;--brand-ink:#fff;--accent:#FF6B57;--accent-ink:#2A0A04}
+@media (prefers-color-scheme: dark){:root{--bg:#081417;--surface:#0F2125;--tint:#12272B;--ink:#E8F1F2;--muted:#9AB0B4;--line:#1D3338;--brand:#5CCFD0;--brand-ink:#04161A;--accent:#FF7C69;--accent-ink:#1A0602;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+.wrap{max-width:760px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left,0px)) 0 max(20px,env(safe-area-inset-right,0px))}
+header{border-bottom:1px solid var(--line)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;height:64px}
+.logo{font:600 1.3rem Sora,system-ui,sans-serif;letter-spacing:-.04em;text-decoration:none;color:inherit}
+header a.shop{font-weight:600;color:var(--brand);text-decoration:none;padding:10px 0}
+main{padding:clamp(36px,6vw,64px) 0 72px}
+a{color:var(--brand)}
+h1,h2,h3{font-family:Sora,system-ui,sans-serif;font-weight:500;letter-spacing:-.03em;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(2rem,6vw,2.9rem);margin:10px 0 14px}
+h2{font-size:clamp(1.35rem,3.4vw,1.7rem);margin:44px 0 12px}
+h3{font-size:1.1rem;font-weight:600;margin:24px 0 6px}
+p,li{color:var(--muted)}p{margin:0 0 14px}
+ul,ol{padding-left:22px;margin:0 0 14px;display:grid;gap:8px}
+strong{color:var(--ink);font-weight:600}
+.eyebrow{font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+.lede{font-size:1.12rem}
+.updated{font-size:.88rem}
+.note{background:var(--tint);border-radius:16px;padding:16px 18px;margin:22px 0}
+.note p:last-child{margin:0}
+table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-variant-numeric:tabular-nums;font-size:.97rem}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--ink)}td{color:var(--muted)}
+.tbl{overflow-x:auto}
+.cta{margin-top:48px;padding:28px;border-radius:24px;background:var(--brand);color:var(--brand-ink)}
+.cta h2{margin:0 0 8px;color:inherit}.cta p{color:inherit;opacity:.85}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 28px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;margin-top:6px}
+.more{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.more a{border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;text-decoration:none;font-weight:500;font-size:.92rem;color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;font-size:.86rem;color:var(--muted)}
+footer p{margin:0 0 8px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
