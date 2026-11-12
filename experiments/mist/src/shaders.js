@@ -34,7 +34,7 @@ void main(){vUv=uv;gl_Position=vec4(position.xy,.99999,1.);}
 export const BG_FS = /* glsl */`
 precision highp float;
 varying vec2 vUv;
-uniform float uTime,uAspect,uGY,uU,uReveal,uGrow,uSeep;
+uniform float uTime,uAspect,uGY,uU,uReveal,uGrow,uSeep,uFS;
 uniform vec4 uBottle;
 ${COMMON}
 float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
@@ -75,7 +75,7 @@ void main(){
         float cell=ci+float(j);
         float cx=follX(cell);
         float lean=(hash11(cell+9.)-.5)*.30;
-        float depth=mix(.9,1.25,hash11(cell+3.));
+        float depth=mix(.9,1.25,hash11(cell+3.))*uFS;
         float g=clamp(uGrow*1.25-hash11(cell+77.)*.25,0.,1.);
         vec2 q=vec2(X-cx-lean*D*(1.-.35*D/depth),D);
         float tr=mix(.040,.066,smoothstep(0.,depth,D));
